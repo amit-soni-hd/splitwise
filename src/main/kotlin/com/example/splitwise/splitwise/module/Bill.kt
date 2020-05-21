@@ -1,6 +1,6 @@
-package code.module
+package com.example.splitwise.splitwise.module
 
-import code.enums.BillStatus
+import com.example.splitwise.splitwise.enum.BillStatus
 import lombok.Data
 import java.util.*
 

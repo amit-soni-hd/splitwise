@@ -1,7 +1,7 @@
 package com.example.splitwise.splitwise.dto
 
-import code.enums.BillStatus
-import code.module.User
+import com.example.splitwise.splitwise.enum.BillStatus
+import com.example.splitwise.splitwise.module.User
 import java.util.*
 
 class BillDto() {

@@ -1,8 +1,8 @@
-package code.service
+package com.example.splitwise.splitwise.service
 
-import code.module.Bill
-import code.module.Group
-import code.module.User
+import com.example.splitwise.splitwise.module.Bill
+import com.example.splitwise.splitwise.module.Group
+import com.example.splitwise.splitwise.module.User
 import com.example.splitwise.splitwise.dto.UserDto
 
 class UserServiceImpl() : UserService {
@@ -65,7 +65,7 @@ class UserServiceImpl() : UserService {
         return userList?.get(userEmail)?.creditorsBill
     }
 
-    override fun addDebtorBill(userEmail: String, bill:Bill): Boolean? {
+    override fun addDebtorBill(userEmail: String, bill: Bill): Boolean? {
         return userList?.get(userEmail)?.debtorsBill?.add(bill)
     }
 

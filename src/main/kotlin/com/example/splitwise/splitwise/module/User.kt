@@ -1,4 +1,4 @@
-package code.module
+package com.example.splitwise.splitwise.module
 
 class User() {
 

@@ -1,5 +1,6 @@
-package code.module
+package com.example.splitwise.splitwise.module
 
+import com.example.splitwise.splitwise.module.User
 import lombok.Data
 
 @Data

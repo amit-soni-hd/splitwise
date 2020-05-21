@@ -1,6 +1,6 @@
-package code.service
+package com.example.splitwise.splitwise.service
 
-import code.module.Bill
+import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.dto.BillDto
 import org.modelmapper.ModelMapper
 
@@ -15,7 +15,7 @@ class BillServiceImpl : BillService {
         bills = mutableMapOf()
     }
 
-    fun generateBill(billDto: BillDto): Bill? {
+    override fun generateBill(billDto: BillDto): Bill? {
 
         var bill = modelMapper?.map(billDto, Bill::class.java)
         bills?.put(bill?.billId!!, bill!!)
@@ -23,7 +23,7 @@ class BillServiceImpl : BillService {
     }
 
 
-    fun getBill(billId:Long): Bill? {
+    override fun getBill(billId:Long): Bill? {
         return bills?.get(billId)
     }
 
