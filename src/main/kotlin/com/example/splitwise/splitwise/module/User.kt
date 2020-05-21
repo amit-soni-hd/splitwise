@@ -1,19 +1,25 @@
 package code.module
 
-import lombok.Data
-
-@Data
 class User() {
 
     var email: String? = null
     var fName: String? = null
     var lName: String? = null
-    var phone: String? = null
+    var contact: String? = null
+    var userGroup: MutableList<Group>? = null
+    var debtorsBill: MutableList<Bill>? = null
+    var creditorsBill: MutableList<Bill>? = null
 
-    constructor(fName: String, lName: String, email: String, phone: String) : this() {
+    init {
+        userGroup = mutableListOf()
+        debtorsBill = mutableListOf()
+        creditorsBill = mutableListOf()
+    }
+
+    constructor(fName: String, lName: String, email: String, contact: String) : this() {
         this.fName = fName
         this.lName = lName
-        this.phone = phone
+        this.contact = contact
         this.email = email
     }
 }

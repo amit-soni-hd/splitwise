@@ -1,5 +1,7 @@
 package code.service
 
+import code.module.Bill
+import code.module.Group
 import code.module.User
 import com.example.splitwise.splitwise.dto.UserDto
 
@@ -16,7 +18,7 @@ class UserServiceImpl() : UserService {
         if (!userList?.containsKey(userDto.email)!!) {
             var user = User()
             user.email = userDto.email
-            user.phone = userDto.phone
+            user.contact = userDto.phone
             user.lName = userDto.lName
             user.fName = userDto.fName
             userList?.put(userDto.email!!, user)
@@ -32,7 +34,7 @@ class UserServiceImpl() : UserService {
         if (user != null) {
             user.fName = requestUser.fName
             user.lName = requestUser.lName
-            user.phone = requestUser.phone
+            user.contact = requestUser.phone
             return user
         }
         return null
@@ -49,6 +51,26 @@ class UserServiceImpl() : UserService {
     fun deleteUser(emailId: String): User? {
         val remove = userList?.remove(emailId)
         return remove
+    }
+
+    fun getGroupList(userEmail: String): MutableList<Group>? {
+        return userList?.get(userEmail)?.userGroup
+    }
+
+    fun getDebtors(userEmail:String): MutableList<Bill>? {
+        return userList?.get(userEmail)?.debtorsBill
+    }
+
+    fun getCreditors(userEmail:String): MutableList<Bill>? {
+        return userList?.get(userEmail)?.creditorsBill
+    }
+
+    fun addDebtorBill(userEmail: String, bill:Bill): Boolean? {
+        return userList?.get(userEmail)?.debtorsBill?.add(bill)
+    }
+
+    fun addCreditorBill(userEmail: String, bill: Bill): Boolean? {
+        return userList?.get(userEmail)?.creditorsBill?.add(bill)
     }
 
 }
