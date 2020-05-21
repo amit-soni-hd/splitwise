@@ -6,20 +6,19 @@ class UserDto() {
     var fName: String? = null
     var lName: String? = null
     var email: String? = null
-    var phone: String? = null
+    var contact: String? = null
 
-    constructor(fName: String?, lName: String?, email: String?, phone: String?): this() {
+    constructor(fName: String?, lName: String?, email: String, phone: String?): this() {
         this.fName = fName
         this.lName = lName
         this.email = email
-        this.phone = phone
+        this.contact = phone
     }
 
     constructor(fName: String?, lName: String?, phone: String?): this() {
         this.fName = fName
         this.lName = lName
-        this.email = email
-        this.phone = phone
+        this.contact = phone
     }
 
 

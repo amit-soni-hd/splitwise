@@ -18,7 +18,7 @@ class UserServiceImpl() : UserService {
         if (!userList?.containsKey(userDto.email)!!) {
             var user = User()
             user.email = userDto.email
-            user.contact = userDto.phone
+            user.contact = userDto.contact
             user.lName = userDto.lName
             user.fName = userDto.fName
             userList?.put(userDto.email!!, user)
@@ -34,7 +34,7 @@ class UserServiceImpl() : UserService {
         if (user != null) {
             user.fName = requestUser.fName
             user.lName = requestUser.lName
-            user.contact = requestUser.phone
+            user.contact = requestUser.contact
             return user
         }
         return null
