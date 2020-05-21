@@ -38,7 +38,7 @@ class BalanceServiceImpl : BalanceService {
             bill.involvedUser?.forEach { (userEmail, status) ->
                 run {
                     if (status == BillStatus.DUE) {
-                        total += bill.amount?.div(bill.involvedUser!!.size)!!
+                        total += bill.amount?.div(bill.involvedUser!!.size + 1)!!
                     }
                 }
             }
@@ -53,7 +53,7 @@ class BalanceServiceImpl : BalanceService {
             bill.involvedUser?.forEach { (userEmail, status) ->
                 run {
                     if (userEmail == respectUserEmail && status == BillStatus.DUE) {
-                        total += bill.amount?.div(bill.involvedUser!!.size)!!
+                        total += bill.amount?.div(bill.involvedUser!!.size + 1)!!
                     }
                 }
             }
