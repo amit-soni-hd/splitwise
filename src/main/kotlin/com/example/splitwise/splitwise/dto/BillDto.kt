@@ -10,9 +10,9 @@ class BillDto() {
     var description: String? = null
     var amount: Int? = null
     var date: Date? = null
-    var involvedUser: MutableMap<User, BillStatus>? = null
+    var involvedUser: MutableMap<String, BillStatus>? = null
 
-    constructor(billId: Long, description: String?, amount: Int?, date: Date?, involvedUser: MutableMap<User, BillStatus>?) : this() {
+    constructor(billId: Long, description: String?, amount: Int?, date: Date?, involvedUser: MutableMap<String, BillStatus>?) : this() {
         this.billId = billId
         this.description = description
         this.amount = amount
