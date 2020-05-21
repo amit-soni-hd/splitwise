@@ -53,23 +53,23 @@ class UserServiceImpl() : UserService {
         return remove
     }
 
-    fun getGroupList(userEmail: String): MutableList<Group>? {
+    override fun getGroupList(userEmail: String): MutableList<Group>? {
         return userList?.get(userEmail)?.userGroup
     }
 
-    fun getDebtors(userEmail:String): MutableList<Bill>? {
+    override fun getDebtors(userEmail:String): MutableList<Bill>? {
         return userList?.get(userEmail)?.debtorsBill
     }
 
-    fun getCreditors(userEmail:String): MutableList<Bill>? {
+    override fun getCreditors(userEmail:String): MutableList<Bill>? {
         return userList?.get(userEmail)?.creditorsBill
     }
 
-    fun addDebtorBill(userEmail: String, bill:Bill): Boolean? {
+    override fun addDebtorBill(userEmail: String, bill:Bill): Boolean? {
         return userList?.get(userEmail)?.debtorsBill?.add(bill)
     }
 
-    fun addCreditorBill(userEmail: String, bill: Bill): Boolean? {
+    override fun addCreditorBill(userEmail: String, bill: Bill): Boolean? {
         return userList?.get(userEmail)?.creditorsBill?.add(bill)
     }
 
