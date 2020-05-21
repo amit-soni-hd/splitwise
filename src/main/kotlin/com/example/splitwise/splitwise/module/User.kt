@@ -2,19 +2,13 @@ package com.example.splitwise.splitwise.module
 
 class User() {
 
-    var email: String? = null
-    var fName: String? = null
-    var lName: String? = null
-    var contact: String? = null
-    var userGroup: MutableList<Group>? = null
-    var debtorsBill: MutableList<Bill>? = null
-    var creditorsBill: MutableList<Bill>? = null
-
-    init {
-        userGroup = mutableListOf()
-        debtorsBill = mutableListOf()
-        creditorsBill = mutableListOf()
-    }
+    lateinit var email: String
+    lateinit var fName: String
+    lateinit var lName: String
+    lateinit var contact: String
+    var debtorsBill: MutableList<Bill> = mutableListOf()
+    var creditorsBill: MutableList<Bill> = mutableListOf()
+    var userGroup: MutableList<Group> = mutableListOf()
 
     constructor(fName: String, lName: String, email: String, contact: String) : this() {
         this.fName = fName

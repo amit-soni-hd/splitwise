@@ -28,18 +28,18 @@ internal class UserServiceImplTest {
     @DisplayName("Create the new user")
     fun create() {
         var userDto: UserDto = UserDto("Amit", "Verma", "amit@gmail.com", "8979710512")
-        val create = userService?.create(userDto)
+        val response = userService?.create(userDto)
         assertTrue { userService?.userList?.size == 2 }
-        assertEquals(userDto.email, create?.email)
+        assertEquals(userDto.email, (response?.objects as User).email)
     }
 
     @Test
     @DisplayName("Update the user details")
     fun updateDetails() {
         var userDto: UserDto = UserDto("Amit", "Kumar", "verma@gmail.com", "8979710512")
-        val create = userService?.updateDetails(userDto)
+        val response = userService?.updateDetails("verma@gmail.com", userDto)
         assertTrue { userService?.userList?.size == 1 }
-        assertEquals(userDto.lName, create?.lName)
+        assertEquals(userDto.lName, (response?.objects as User).lName)
     }
 
     @Test
@@ -82,7 +82,7 @@ internal class UserServiceImplTest {
     @DisplayName("Get debtors functionality")
     fun getDebtors() {
         var bill = Bill(1, "Party bill", 5000, Date(), mutableMapOf("kumar@gmail.com" to BillStatus.DUE))
-        userService?.addDebtorBill("verma@gmail.com", bill )
+        userService?.addDebtorBill("verma@gmail.com", bill)
         val debtors = userService?.getDebtors("verma@gmail.com")
         assertTrue { debtors?.size == 1 }
         assertEquals(debtors?.get(0)?.amount, 5000)
@@ -92,7 +92,7 @@ internal class UserServiceImplTest {
     @DisplayName("Get creditors functionality")
     fun getCreditors() {
         var bill = Bill(1, "Party bill", 5000, Date(), mutableMapOf("kumar@gmail.com" to BillStatus.DUE))
-        userService?.addCreditorBill("verma@gmail.com", bill )
+        userService?.addCreditorBill("verma@gmail.com", bill)
         val creditors = userService?.getCreditors("verma@gmail.com")
         assertTrue { creditors?.size == 1 }
         assertEquals(creditors?.get(0)?.amount, 5000)
@@ -102,7 +102,7 @@ internal class UserServiceImplTest {
     @DisplayName("Add new debtors bill")
     fun addDebtorBill() {
         var bill = Bill(1, "Party bill", 5000, Date(), mutableMapOf("kumar@gmail.com" to BillStatus.DUE))
-        userService?.addDebtorBill("verma@gmail.com", bill )
+        userService?.addDebtorBill("verma@gmail.com", bill)
         val debtors = userService?.getDebtors("verma@gmail.com")
         assertEquals(debtors?.get(0)?.amount, 5000)
     }
@@ -111,7 +111,7 @@ internal class UserServiceImplTest {
     @DisplayName("Add new creditors bill")
     fun addCreditorBill() {
         var bill = Bill(1, "Party bill", 5000, Date(), mutableMapOf("kumar@gmail.com" to BillStatus.DUE))
-        userService?.addCreditorBill("verma@gmail.com", bill )
+        userService?.addCreditorBill("verma@gmail.com", bill)
         val creditors = userService?.getCreditors("verma@gmail.com")
         assertEquals(creditors?.get(0)?.amount, 5000)
     }
