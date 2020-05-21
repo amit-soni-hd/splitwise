@@ -29,7 +29,7 @@ internal class UserServiceImplTest {
     fun create() {
         var userDto: UserDto = UserDto("Amit", "Verma", "amit@gmail.com", "8979710512")
         val response = userService?.create(userDto)
-        assertTrue { userService?.userList?.size == 2 }
+        assertTrue { userService?.getAllUser()?.size == 2 }
         assertEquals(userDto.email, (response?.objects as User).email)
     }
 
@@ -38,7 +38,7 @@ internal class UserServiceImplTest {
     fun updateDetails() {
         var userDto: UserDto = UserDto("Amit", "Kumar", "verma@gmail.com", "8979710512")
         val response = userService?.updateDetails("verma@gmail.com", userDto)
-        assertTrue { userService?.userList?.size == 1 }
+        assertTrue { userService?.getAllUser()?.size == 1 }
         assertEquals(userDto.lName, (response?.objects as User).lName)
     }
 
@@ -63,7 +63,7 @@ internal class UserServiceImplTest {
         var userDto: UserDto = UserDto("Amit", "Kumar", "amit@gmail.com", "8979710512")
         userService?.create(userDto)
         val deleteUser = userService?.deleteUser("verma@gmail.com")
-        assertTrue { userService?.userList?.size == 1 }
+        assertTrue { (userService?.getAllUser())?.size == 1 }
         assertEquals(deleteUser?.email, "verma@gmail.com")
     }
 
@@ -72,7 +72,7 @@ internal class UserServiceImplTest {
     fun getGroupList() {
         var user = User("Amit", "Verma", "kumar@gmail.com", "8979710512")
         var group = Group("Birthday Party", mutableListOf(user))
-        userService?.userList?.get("verma@gmail.com")?.userGroup?.add(group)
+        userService?.getUser("verma@gmail.com")?.userGroup?.add(group)
         val groupList = userService?.getGroupList("verma@gmail.com")
         assertTrue { groupList?.size == 1 }
         assertEquals(groupList?.get(0)?.userList?.get(0)?.email, user.email)

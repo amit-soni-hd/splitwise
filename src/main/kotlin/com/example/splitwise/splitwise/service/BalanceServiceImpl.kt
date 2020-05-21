@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class BalanceServiceImpl : BalanceService {
 
     @Autowired
-    lateinit var userService: UserService
+    private lateinit var userService: UserService
 
     override fun getTotalBalance(userEmail: String): Map<String, Long> {
 

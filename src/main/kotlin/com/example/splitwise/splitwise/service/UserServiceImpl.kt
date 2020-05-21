@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserServiceImpl : UserService {
 
-    var userList: MutableMap<String, User> = mutableMapOf()
+    private var userList: MutableMap<String, User> = mutableMapOf()
 
     override fun create(userDto: UserDto): Response {
 

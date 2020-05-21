@@ -1,9 +1,7 @@
 package com.example.splitwise.splitwise.controller
 
 import com.example.splitwise.splitwise.dto.BillDto
-import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.Response
-import com.example.splitwise.splitwise.service.BillService
 import com.example.splitwise.splitwise.service.BillServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -25,7 +23,7 @@ class BillController {
     }
 
     @GetMapping("/{billId}")
-    fun getBill(@PathVariable(value = "billId") billId:Long): ResponseEntity<Response> {
+    fun getBill(@PathVariable(value = "billId") billId: Long): ResponseEntity<Response> {
         val bill = billService.getBill(billId)
         if (bill == null) {
             var response = Response("Bill not present (might be bill id is wrong)", BillDto::class, HttpStatus.NOT_FOUND)
