@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl() : UserService {
+class UserServiceImpl : UserService {
 
     var userList: MutableMap<String, User> = mutableMapOf()
 

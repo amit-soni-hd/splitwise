@@ -16,7 +16,7 @@ class UserController {
     @Autowired
     private lateinit var userService: UserService
 
-    @PostMapping("/")
+    @PostMapping
     fun createUser(@RequestBody userDto: UserDto): ResponseEntity<Response> {
         val response = userService.create(userDto)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)

@@ -26,26 +26,26 @@ internal class BillServiceImplTest {
         var user2 = User("Rajat", "Verma", "rajat@gmail.com", "8979710512")
         var user3 = User("Tushar", "Verma", "tushar@gmail.com", "8979710512")
         var user4 = User("Ankur", "Verma", "ankur@gmail.com", "8979710512")
-        userService?.userList?.putAll(mapOf(Pair(user1.email!!, user1), Pair(user2.email!!, user2),
-                Pair(user3.email!!, user3), Pair(user4.email!!, user4)))
+        userService?.userList?.putAll(mapOf(Pair(user1.email, user1), Pair(user2.email, user2),
+                Pair(user3.email, user3), Pair(user4.email, user4)))
 
     }
 
     @Test
     @DisplayName("Generate new bill")
     fun generateBill() {
-        var billDto = BillDto(1, "Party bill", 5000, Date(),
+        var billDto = BillDto(1,"amit@gmail.com", "Party bill", 5000, Date(),
                 mutableMapOf("rajat@gmail.com" to BillStatus.DUE))
-        val generateBill = billService?.generateBill("amit@gmail.com", billDto)
+        val generateBill = billService?.generateBill(billDto)
         assertEquals(billDto.billId, generateBill?.billId)
     }
 
     @Test
     @DisplayName("Get bill by bill id")
     fun getBill() {
-        var billDto = BillDto(1, "Party bill", 5000, Date(),
+        var billDto = BillDto(1,"amit@gmail.com", "Party bill", 5000, Date(),
                 mutableMapOf("kumar@gmail.com" to BillStatus.DUE))
-        billService?.generateBill("verma@gmail.com", billDto)
+        billService?.generateBill(billDto)
         val bill = billService?.getBill(1)
         assertEquals(bill?.description, billDto.description)
     }
