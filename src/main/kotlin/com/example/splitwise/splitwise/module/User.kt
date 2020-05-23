@@ -1,19 +1,34 @@
 package com.example.splitwise.splitwise.module
 
-class User() {
+import javax.persistence.*
 
-    lateinit var email: String
-    lateinit var fName: String
-    lateinit var lName: String
-    lateinit var contact: String
-    var debtorsBill: MutableList<Bill> = mutableListOf()
-    var creditorsBill: MutableList<Bill> = mutableListOf()
-    var userGroup: MutableList<Group> = mutableListOf()
+@Entity
+@Table(name = "user")
+data class User(
 
-    constructor(fName: String, lName: String, email: String, contact: String) : this() {
-        this.fName = fName
-        this.lName = lName
-        this.contact = contact
-        this.email = email
-    }
-}
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "user_id")
+        val userId: Long,
+
+        @Column(name = "user_email", nullable = false, unique = true)
+        var emailId: String,
+
+        @Column(name = "user_name", nullable = false)
+        var name: String,
+
+        @Column(name = "user_contact", nullable = false, unique = true)
+        var contact: String,
+
+        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        @JoinTable(name = "user_bills",
+                joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "bill_id", referencedColumnName = "bill_id")))
+        val bills: MutableList<Bill> = mutableListOf(),
+
+        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        @JoinTable(name = "user_groups",
+                joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "group_id", referencedColumnName = "group_id")))
+        val groups: MutableList<Group> = mutableListOf()
+)

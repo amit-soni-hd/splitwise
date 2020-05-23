@@ -1,77 +1,102 @@
 package com.example.splitwise.splitwise.service
 
+import com.example.splitwise.splitwise.dto.UserCreationDto
+import com.example.splitwise.splitwise.dto.UserUpdateDto
 import com.example.splitwise.splitwise.module.Bill
-import com.example.splitwise.splitwise.module.Group
 import com.example.splitwise.splitwise.module.User
-import com.example.splitwise.splitwise.dto.UserDto
-import com.example.splitwise.splitwise.module.Response
-import org.springframework.http.HttpStatus
+import com.example.splitwise.splitwise.repository.UserRepository
+import org.modelmapper.ModelMapper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl : UserService {
+class UserServiceImpl(val userRepository: UserRepository, val modelMapper: ModelMapper) : UserService {
 
-    private var userList: MutableMap<String, User> = mutableMapOf()
+    companion object {
+        private val log: Logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
+    }
 
-    override fun create(userDto: UserDto): Response {
+    override fun create(userCreationDto: UserCreationDto): User {
+        log.info("Creating user with email id : ", userCreationDto.emailId)
+        userValidation(userCreationDto)
+        val newUser = modelMapper.map(userCreationDto, User::class.java)
+        this.userValidation(userCreationDto);
+        return userRepository.save(newUser)
+    }
 
-        if (!userList.containsKey(userDto.email)) {
-            var user = User()
-            user.email = userDto.email
-            user.contact = userDto.contact
-            user.lName = userDto.lName
-            user.fName = userDto.fName
-            userList.put(userDto.email, user)
-            return Response("Successfully created", user, HttpStatus.CREATED)
+    private fun userValidation(userCreationDto: UserCreationDto) {
+        log.info("Validation user with details {}", userCreationDto)
+        userContactValidation(userCreationDto.contact)
+        userEmailValidation(userCreationDto.emailId)
+    }
+
+    private fun userEmailValidation(emailId: String) {
+        log.info("validate user email id {}", emailId)
+        userRepository.findByEmailId(emailId).orElse(null)
+                ?: throw RuntimeException("user already exist with email $emailId")
+    }
+
+    private fun userContactValidation(contact: String) {
+        log.info("validate user contact  {}", contact)
+        userRepository.findByContact(contact).orElse(null)
+                ?: throw RuntimeException("user already exist with contact $contact")
+    }
+
+    override fun userIdValidation(userId: Long) {
+        log.info("Validating user id {}", userId)
+        val existsById = userRepository.existsById(userId)
+        if (!existsById)
+            throw RuntimeException("User does not exist with id $userId")
+    }
+
+
+    override fun updateDetails(userId: Long, requestUpdate: UserUpdateDto): User {
+
+        val user = userRepository.findById(userId).orElseGet(null)
+                ?: throw RuntimeException("User does not exist with id $userId")
+
+        if (requestUpdate.emailId != null) {
+            this.userEmailValidation(requestUpdate.emailId!!)
+            user.emailId = requestUpdate.emailId!!
         }
-        return Response("User already exist", userList.get(userDto.email)!!, HttpStatus.NOT_ACCEPTABLE)
-    }
 
+        if (requestUpdate.contact != null) {
+            this.userContactValidation(requestUpdate.contact!!)
+            user.contact = requestUpdate.contact!!
+        }
 
-    override fun updateDetails(userEmail: String, requestUser: UserDto): Response {
-
-            val user = userList[userEmail]
-            user?.fName = requestUser.fName
-            user?.lName = requestUser.lName
-            user?.contact = requestUser.contact
-
-        return if(user!=null)
-            Response("Successfully created", user, HttpStatus.ACCEPTED)
-        else
-            Response("Successfully created", UserDto::class, HttpStatus.ACCEPTED)
+        if (requestUpdate.name != null) {
+            user.name = requestUpdate.name!!
+        }
+        return userRepository.save(user)
 
     }
 
-    override fun getUser(userEmail: String): User? {
-        return userList.get(userEmail)
+    override fun getUser(userId: Long): User {
+        log.info("Get user by id {}", userId)
+        return userRepository.findById(userId).orElseGet(null)
+                ?: throw RuntimeException("User does not exist with id $userId")
     }
 
-    override fun getAllUser(): MutableCollection<User>? {
-        return userList.values
+    override fun getAllUser(): MutableIterator<User> {
+        log.info("Get all user ")
+        return userRepository.findAll().iterator()
     }
 
-    fun deleteUser(emailId: String): User? {
-        return userList.remove(emailId)
+    fun deleteUser(userId: Long): Boolean {
+        log.info("Deleting user with id {}", userId)
+        if (userRepository.existsById(userId))
+            userRepository.deleteById(userId)
+        else throw RuntimeException("User doesn't  exist with id $userId")
+        return true
     }
 
-    override fun getGroupList(userEmail: String): MutableList<Group>? {
-        return userList.get(userEmail)?.userGroup
-    }
-
-    override fun getDebtors(userEmail: String): MutableList<Bill>? {
-        return userList.get(userEmail)?.debtorsBill
-    }
-
-    override fun getCreditors(userEmail: String): MutableList<Bill>? {
-        return userList.get(userEmail)?.creditorsBill
-    }
-
-    override fun addDebtorBill(userEmail: String, bill: Bill): Boolean? {
-        return userList.get(userEmail)?.debtorsBill?.add(bill)
-    }
-
-    override fun addCreditorBill(userEmail: String, bill: Bill): Boolean? {
-        return userList.get(userEmail)?.creditorsBill?.add(bill)
+    override fun addUserBill(userId: Long, bill: Bill) {
+        userIdValidation(userId)
+        val user = userRepository.findById(userId).get()
+        user.bills.add(bill)
+        userRepository.save(user)
     }
 
 }

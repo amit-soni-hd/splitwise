@@ -1,8 +1,8 @@
 package com.example.splitwise.splitwise.controller
 
-import com.example.splitwise.splitwise.dto.UserDto
-import com.example.splitwise.splitwise.module.Response
-import com.example.splitwise.splitwise.module.User
+import com.example.splitwise.splitwise.dto.ResponseDto
+import com.example.splitwise.splitwise.dto.UserCreationDto
+import com.example.splitwise.splitwise.dto.UserUpdateDto
 import com.example.splitwise.splitwise.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -17,22 +17,24 @@ class UserController {
     private lateinit var userService: UserService
 
     @PostMapping
-    fun createUser(@RequestBody userDto: UserDto): ResponseEntity<Response> {
-        val response = userService.create(userDto)
+    fun createUser(@RequestBody userCreationDto: UserCreationDto): ResponseEntity<ResponseDto> {
+        val createUser = userService.create(userCreationDto)
+        var response = ResponseDto("Successfully updated", createUser, HttpStatus.CREATED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
-    @PutMapping("/{userEmail}")
-    fun updateUSerDetails(@RequestBody userDto: UserDto, @PathVariable(value = "userEmail") userEmail: String): ResponseEntity<Response> {
-        val response = userService.updateDetails(userEmail, userDto)
+    @PutMapping("/{userId}")
+    fun updateUSerDetails(@RequestBody userUpdateDto: UserUpdateDto, @PathVariable(value = "userId") userId: Long): ResponseEntity<ResponseDto> {
+        val updatedUser = userService.updateDetails(userId, userUpdateDto)
+        var response = ResponseDto("Successfully updated", updatedUser, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
-    @GetMapping("/{userEmail}")
-    fun getUser(@PathVariable(value = "userEmail") userEmail: String): ResponseEntity<User> {
-        val user = userService.getUser(userEmail)
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(user)
-
+    @GetMapping("/{userId}")
+    fun getUser(@PathVariable(value = "userId") userId: Long): ResponseEntity<ResponseDto> {
+        val user = userService.getUser(userId)
+        var response = ResponseDto("Successfully updated", user, HttpStatus.FOUND)
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
 

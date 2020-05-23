@@ -1,17 +1,26 @@
 package com.example.splitwise.splitwise.module
 
-import com.example.splitwise.splitwise.module.User
-import lombok.Data
+import java.time.LocalDateTime
+import javax.persistence.*
 
-@Data
-class Group {
+@Entity
+@Table(name = "group")
+data class Group(
 
-    var groupId: String? = null
-    var groupName: String? = null
-    var userList: MutableList<User>? = null
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "group_id")
+        val groupId: Long,
 
-    constructor(groupName: String?, userList: MutableList<User>?) {
-        this.groupName = groupName
-        this.userList = userList
-    }
-}
+        @Column(name = "group_name")
+        var groupName: String,
+
+        @Column(name = "created_date_time")
+        var date: LocalDateTime,
+
+        @ManyToMany(mappedBy = "groups")
+        val involvedUser: MutableList<User> = mutableListOf(),
+
+        @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "group")
+        val bills: MutableList<Bill> = mutableListOf()
+)
