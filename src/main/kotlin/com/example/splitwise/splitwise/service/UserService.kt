@@ -8,9 +8,12 @@ import com.example.splitwise.splitwise.module.User
 interface UserService {
     fun create(userCreationDto: UserCreationDto): User
     fun updateDetails(userId: Long, requestUpdate: UserUpdateDto): User
-    fun getUser(userId: Long): User
+    fun getUserById(userId: Long): User
     fun getAllUser(): MutableIterator<User>
     fun userIdValidation(userId: Long)
     fun addUserBill(userId: Long, bill: Bill)
     fun getUserBills(userId: Long): MutableList<Bill>
+    fun getUserByEmail(emailId: String): User
+    fun getUserByContact(contact: String): User
+
 }

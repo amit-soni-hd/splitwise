@@ -77,7 +77,7 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
 
     }
 
-    override fun getUser(userId: Long): User {
+    override fun getUserById(userId: Long): User {
         log.info("Get user by id {}", userId)
         return userRepository.findById(userId).orElseGet(null)
                 ?: throw UserNotFoundException("User does not exist with id $userId")
@@ -108,6 +108,16 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         log.info("Get user bill with user id $userId")
         userIdValidation(userId = userId)
         return userRepository.findById(userId).get().bills
+    }
+
+    override fun getUserByEmail(emailId: String): User {
+        return userRepository.findByEmailId(email = emailId).orElseGet(null)
+                ?: throw UserNotFoundException("user does not exist with email $emailId")
+    }
+
+    override fun getUserByContact(contact: String): User {
+        return userRepository.findByContact(contact = contact).orElseGet(null)
+                ?: throw UserNotFoundException("user does not exist with contact no $contact")
     }
 
 }

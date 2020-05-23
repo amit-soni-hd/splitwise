@@ -2,7 +2,6 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.Payment
-import com.example.splitwise.splitwise.module.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -76,7 +75,7 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
 
     private fun findUserBills(bills: List<Bill>, userId:Long): List<Bill> {
         return bills.filter { bill: Bill ->
-            val user = userService.getUser(userId)
+            val user = userService.getUserById(userId)
             bill.involvedUser.contains(user)
         }
     }
