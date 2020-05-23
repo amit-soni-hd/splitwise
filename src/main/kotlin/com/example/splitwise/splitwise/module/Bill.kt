@@ -1,11 +1,10 @@
 package com.example.splitwise.splitwise.module
 
-import com.example.splitwise.splitwise.enum.BillStatus
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "bill")
+@Table(name = "bill_table")
 data class Bill(
 
         @Id

@@ -75,9 +75,9 @@ class BillServiceImpl(val modelMapper: ModelMapper, val billRepository: BillRepo
         if (billUpdateDto.involvedUser != null) {
             bill.involvedUser = billUpdateDto.involvedUser!!
         }
-        if (billUpdateDto.group != null) {
-            bill.group = billUpdateDto.group
-        }
+//        if (billUpdateDto.group != null) {
+//            bill.group = billUpdateDto.group
+//        }
         billRepository.save(bill)
         return bill
 

@@ -3,7 +3,7 @@ package com.example.splitwise.splitwise.module
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_table")
 data class User(
 
         @Id

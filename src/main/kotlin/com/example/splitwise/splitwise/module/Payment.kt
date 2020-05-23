@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 
 @Entity
-@Table(name = "payment")
+@Table(name = "payment_table")
 data class Payment(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
