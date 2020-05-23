@@ -2,6 +2,8 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.dto.UserCreationDto
 import com.example.splitwise.splitwise.dto.UserUpdateDto
+import com.example.splitwise.splitwise.exception.UserExistException
+import com.example.splitwise.splitwise.exception.UserNotFoundException
 import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.User
 import com.example.splitwise.splitwise.repository.UserRepository
@@ -33,28 +35,30 @@ class UserServiceImpl(val userRepository: UserRepository, val modelMapper: Model
 
     private fun userEmailValidation(emailId: String) {
         log.info("validate user email id {}", emailId)
-        userRepository.findByEmailId(emailId).orElse(null)
-                ?: throw RuntimeException("user already exist with email $emailId")
+        val present = userRepository.findByEmailId(emailId).isPresent
+        if (present)
+            throw UserExistException("user already exist with email $emailId")
     }
 
     private fun userContactValidation(contact: String) {
         log.info("validate user contact  {}", contact)
-        userRepository.findByContact(contact).orElse(null)
-                ?: throw RuntimeException("user already exist with contact $contact")
+        val present = userRepository.findByContact(contact).isPresent
+        if (present)
+            throw UserExistException("user already exist with contact $contact")
     }
 
     override fun userIdValidation(userId: Long) {
         log.info("Validating user id {}", userId)
         val existsById = userRepository.existsById(userId)
         if (!existsById)
-            throw RuntimeException("User does not exist with id $userId")
+            throw UserNotFoundException("User does not exist with id $userId")
     }
 
 
     override fun updateDetails(userId: Long, requestUpdate: UserUpdateDto): User {
 
         val user = userRepository.findById(userId).orElseGet(null)
-                ?: throw RuntimeException("User does not exist with id $userId")
+                ?: throw UserNotFoundException("User does not exist with id $userId")
 
         if (requestUpdate.emailId != null) {
             this.userEmailValidation(requestUpdate.emailId!!)
@@ -76,7 +80,7 @@ class UserServiceImpl(val userRepository: UserRepository, val modelMapper: Model
     override fun getUser(userId: Long): User {
         log.info("Get user by id {}", userId)
         return userRepository.findById(userId).orElseGet(null)
-                ?: throw RuntimeException("User does not exist with id $userId")
+                ?: throw UserNotFoundException("User does not exist with id $userId")
     }
 
     override fun getAllUser(): MutableIterator<User> {
@@ -88,11 +92,12 @@ class UserServiceImpl(val userRepository: UserRepository, val modelMapper: Model
         log.info("Deleting user with id {}", userId)
         if (userRepository.existsById(userId))
             userRepository.deleteById(userId)
-        else throw RuntimeException("User doesn't  exist with id $userId")
+        else throw UserNotFoundException("User doesn't  exist with id $userId")
         return true
     }
 
     override fun addUserBill(userId: Long, bill: Bill) {
+        log.info("Add bill with user id $userId and bill $bill")
         userIdValidation(userId)
         val user = userRepository.findById(userId).get()
         user.bills.add(bill)
@@ -100,6 +105,7 @@ class UserServiceImpl(val userRepository: UserRepository, val modelMapper: Model
     }
 
     override fun getUserBills(userId: Long): MutableList<Bill> {
+        log.info("Get user bill with user id $userId")
         userIdValidation(userId = userId)
         return userRepository.findById(userId).get().bills
     }

@@ -1,5 +1,7 @@
 package com.example.splitwise.splitwise.module
 
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import javax.persistence.*
 
 @Entity
@@ -20,13 +22,15 @@ data class User(
         @Column(name = "user_contact", nullable = false, unique = true)
         var contact: String,
 
-        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        @ManyToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
+        @Fetch(FetchMode.SELECT)
         @JoinTable(name = "user_bills",
                 joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "bill_id", referencedColumnName = "bill_id")))
         val bills: MutableList<Bill> = mutableListOf(),
 
-        @ManyToMany(cascade = arrayOf(CascadeType.ALL))
+        @ManyToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
+        @Fetch(FetchMode.SELECT)
         @JoinTable(name = "user_groups",
                 joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "group_id", referencedColumnName = "group_id")))

@@ -3,6 +3,7 @@ package com.example.splitwise.splitwise.controller
 import com.example.splitwise.splitwise.dto.BillGenerateDto
 import com.example.splitwise.splitwise.dto.BillUpdateDto
 import com.example.splitwise.splitwise.dto.ResponseDto
+import com.example.splitwise.splitwise.service.BillService
 import com.example.splitwise.splitwise.service.BillServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -11,10 +12,8 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/bill")
-class BillController {
+class BillController(val billService: BillService) {
 
-    @Autowired
-    lateinit var billService: BillServiceImpl
 
     @PostMapping("/")
     fun generateBill(@RequestBody billGenerateDto: BillGenerateDto): ResponseEntity<ResponseDto> {

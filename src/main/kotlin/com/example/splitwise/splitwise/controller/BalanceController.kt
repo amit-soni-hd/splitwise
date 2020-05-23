@@ -1,6 +1,7 @@
 package com.example.splitwise.splitwise.controller
 
 import com.example.splitwise.splitwise.dto.ResponseDto
+import com.example.splitwise.splitwise.service.BalanceService
 import com.example.splitwise.splitwise.service.BalanceServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -9,10 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/balance")
-class BalanceController {
-
-    @Autowired
-    private lateinit var balanceService: BalanceServiceImpl
+class BalanceController(val balanceService: BalanceService) {
 
     @GetMapping("/total/{userId}")
     fun getTotalBalance(@PathVariable("userId") userId: Long): ResponseEntity<ResponseDto> {

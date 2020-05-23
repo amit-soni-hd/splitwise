@@ -3,10 +3,10 @@ package com.example.splitwise.splitwise.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class UserCreationDto(
-        @JsonProperty("Email")
+        @JsonProperty("email")
         var emailId: String,
 
-        @JsonProperty("Name")
+        @JsonProperty("name")
         var name: String,
 
         @JsonProperty("contact")

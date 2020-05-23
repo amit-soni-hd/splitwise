@@ -4,7 +4,6 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "bill_table")
 data class Bill(
 
         @Id
@@ -30,7 +29,7 @@ data class Bill(
         @ManyToMany(mappedBy = "bills")
         var involvedUser: MutableList<User> = mutableListOf(),
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @ManyToOne(fetch = FetchType.LAZY, optional = true)
         @JoinColumn(name = "group_id")
         var group:Group? = null
 )
