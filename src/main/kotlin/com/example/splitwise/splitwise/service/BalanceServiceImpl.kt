@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BalanceServiceImpl(val userService: UserService, val transactionService: TransactionService) : BalanceService {
+class BalanceServiceImpl(private val userService: UserService, private val transactionService: TransactionService) : BalanceService {
 
     companion object {
-        var log: Logger = LoggerFactory.getLogger(BalanceServiceImpl::class.java)
+        private var log: Logger = LoggerFactory.getLogger(BalanceServiceImpl::class.java)
     }
 
     override fun getTotalBalance(userId: Long): Map<String, Long> {

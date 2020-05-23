@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BillServiceImpl(val modelMapper: ModelMapper, val billRepository: BillRepository, val userService: UserService) : BillService {
+class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService) : BillService {
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(BillServiceImpl::class.java)
