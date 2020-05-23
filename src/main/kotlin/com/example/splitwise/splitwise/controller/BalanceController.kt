@@ -15,7 +15,7 @@ class BalanceController {
     private lateinit var balanceService: BalanceServiceImpl
 
     @GetMapping("/total/{userId}")
-    fun getTotalBalance(@PathVariable("userId") userId:Long): ResponseEntity<ResponseDto> {
+    fun getTotalBalance(@PathVariable("userId") userId: Long): ResponseEntity<ResponseDto> {
         val totalBalance = balanceService.getTotalBalance(userId = userId)
         var response = ResponseDto("Total balance", totalBalance, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
