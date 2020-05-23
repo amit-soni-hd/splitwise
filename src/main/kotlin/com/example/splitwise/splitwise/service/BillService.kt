@@ -8,4 +8,5 @@ interface BillService {
     fun generateBill(billGenerateDto: BillGenerateDto): Bill
     fun getBill(billId: Long): Bill
     fun updateBill(billUpdateDto: BillUpdateDto): Bill
+    fun isBillExist(billId: Long)
 }

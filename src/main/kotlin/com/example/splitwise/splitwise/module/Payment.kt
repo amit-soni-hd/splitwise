@@ -7,9 +7,13 @@ import javax.persistence.*
 @Table(name = "payment")
 data class Payment(
 
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "bill_id",nullable = false)
+        @Column(name = "payment_id")
+        val paymentId:Long,
+
+        @Column(name = "bill_id", nullable = false)
         val billId: Long,
 
         @Column(name = "payer_id",nullable = false)

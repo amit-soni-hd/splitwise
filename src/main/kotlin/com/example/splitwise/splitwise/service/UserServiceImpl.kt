@@ -99,4 +99,9 @@ class UserServiceImpl(val userRepository: UserRepository, val modelMapper: Model
         userRepository.save(user)
     }
 
+    override fun getUserBills(userId: Long): MutableList<Bill> {
+        userIdValidation(userId = userId)
+        return userRepository.findById(userId).get().bills
+    }
+
 }

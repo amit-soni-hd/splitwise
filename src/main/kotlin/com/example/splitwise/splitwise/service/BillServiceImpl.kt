@@ -36,8 +36,15 @@ class BillServiceImpl(val modelMapper: ModelMapper, val billRepository: BillRepo
 
     override fun getBill(billId: Long): Bill {
         log.info("get bill with id $billId")
-        return billRepository.findById(billId).orElseGet(null)
-                ?: throw BillNotFoundException("Bill does not exist with id $billId")
+        isBillExist(billId = billId)
+        return billRepository.findById(billId).get()
+    }
+
+    override fun isBillExist(billId: Long) {
+        log.info("check bill validation with id $billId")
+        val existsById = billRepository.existsById(billId)
+        if(!existsById)
+            throw BillNotFoundException("Bill does not exist with id $billId")
     }
 
     private fun splitBill(bill: Bill) {

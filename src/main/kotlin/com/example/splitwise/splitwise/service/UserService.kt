@@ -12,4 +12,5 @@ interface UserService {
     fun getAllUser(): MutableIterator<User>
     fun userIdValidation(userId: Long)
     fun addUserBill(userId: Long, bill: Bill)
+    fun getUserBills(userId: Long): MutableList<Bill>
 }
