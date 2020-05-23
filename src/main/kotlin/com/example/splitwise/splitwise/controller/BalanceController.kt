@@ -29,5 +29,4 @@ class BalanceController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
-
 }

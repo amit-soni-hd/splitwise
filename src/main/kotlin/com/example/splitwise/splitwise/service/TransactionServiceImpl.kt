@@ -1,6 +1,5 @@
 package com.example.splitwise.splitwise.service
 
-import com.example.splitwise.splitwise.enum.BillStatus
 import com.example.splitwise.splitwise.module.Payment
 import com.example.splitwise.splitwise.repository.PaymentRepository
 import org.springframework.stereotype.Service
