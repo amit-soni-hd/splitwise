@@ -33,14 +33,14 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         userEmailValidation(userCreationDto.emailId)
     }
 
-    private fun userEmailValidation(emailId: String) {
+    override fun userEmailValidation(emailId: String) {
         log.info("validate user email id {}", emailId)
         val present = userRepository.findByEmailId(emailId).isPresent
         if (present)
             throw UserExistException("user already exist with email $emailId")
     }
 
-    private fun userContactValidation(contact: String) {
+    override fun userContactValidation(contact: String) {
         log.info("validate user contact  {}", contact)
         val present = userRepository.findByContact(contact).isPresent
         if (present)
@@ -57,8 +57,8 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
 
     override fun updateDetails(userId: Long, requestUpdate: UserUpdateDto): User {
 
-        val user = userRepository.findById(userId).orElseGet(null)
-                ?: throw UserNotFoundException("User does not exist with id $userId")
+        userIdValidation(userId = userId)
+        val user = userRepository.findById(userId).get()
 
         if (requestUpdate.emailId != null) {
             this.userEmailValidation(requestUpdate.emailId!!)
@@ -79,8 +79,8 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
 
     override fun getUserById(userId: Long): User {
         log.info("Get user by id {}", userId)
-        return userRepository.findById(userId).orElseGet(null)
-                ?: throw UserNotFoundException("User does not exist with id $userId")
+        userIdValidation(userId = userId)
+        return userRepository.findById(userId).get()
     }
 
     override fun getAllUser(): MutableIterator<User> {
@@ -88,7 +88,7 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         return userRepository.findAll().iterator()
     }
 
-    fun deleteUser(userId: Long): Boolean {
+    override fun deleteUser(userId: Long): Boolean {
         log.info("Deleting user with id {}", userId)
         if (userRepository.existsById(userId))
             userRepository.deleteById(userId)
@@ -96,12 +96,12 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         return true
     }
 
-    override fun addUserBill(userId: Long, bill: Bill) {
+    override fun addUserBill(userId: Long, bill: Bill): User {
         log.info("Add bill with user id $userId and bill $bill")
         userIdValidation(userId)
         val user = userRepository.findById(userId).get()
         user.bills.add(bill)
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 
     override fun getUserBills(userId: Long): MutableList<Bill> {

@@ -11,9 +11,11 @@ interface UserService {
     fun getUserById(userId: Long): User
     fun getAllUser(): MutableIterator<User>
     fun userIdValidation(userId: Long)
-    fun addUserBill(userId: Long, bill: Bill)
+    fun addUserBill(userId: Long, bill: Bill): User
     fun getUserBills(userId: Long): MutableList<Bill>
     fun getUserByEmail(emailId: String): User
     fun getUserByContact(contact: String): User
-
+    fun deleteUser(userId: Long): Boolean
+    fun userContactValidation(contact: String)
+    fun userEmailValidation(emailId: String)
 }

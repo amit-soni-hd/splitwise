@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class TransactionServiceImpl(private val userService: UserService, private val billService: BillService, private val paymentRepository: PaymentRepository) : TransactionService {
 
     companion object {
-        var log = LoggerFactory.getLogger(TransactionServiceImpl::class.java)
+        private var log = LoggerFactory.getLogger(TransactionServiceImpl::class.java)
     }
 
     override fun getAllTransaction(userId: Long): List<Payment> {
