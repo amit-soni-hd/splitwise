@@ -47,9 +47,7 @@ internal class UserServiceImplTest {
 
 
     @BeforeEach
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
+    fun setUp() = MockitoAnnotations.initMocks(this)
 
     @Test
     @DisplayName("New User creation")

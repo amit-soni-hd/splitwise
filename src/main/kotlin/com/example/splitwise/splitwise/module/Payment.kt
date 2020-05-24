@@ -27,6 +27,9 @@ data class Payment(
         @Column(name = "payment_type", nullable = false)
         val paymentType: PaymentType,
 
+        @Column(name = "payment_due")
+        var paymentDue: Double? = null,
+
         @Column(name = "payment_status")
         var paymentStatus: PaymentStatus = PaymentStatus.PENDING
 )

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class TransactionServiceImpl(private val userService: UserService, private val billService: BillService, private val paymentRepository: PaymentRepository) : TransactionService {
+class TransactionServiceImpl(private val userService: UserService, private val billService: BillService, private val paymentService: PaymentService) : TransactionService {
 
     companion object {
         private var log = LoggerFactory.getLogger(TransactionServiceImpl::class.java)
@@ -15,13 +15,13 @@ class TransactionServiceImpl(private val userService: UserService, private val b
     override fun getAllTransaction(userId: Long): List<Payment> {
         log.info("get all transaction of user $userId")
         userService.userIdValidation(userId = userId)
-        return paymentRepository.findByPayerId(userId = userId).toList()
+        return paymentService.getPaymentsByPayerId(payerId = userId).toList()
     }
 
     override fun getAllTransactionOfBill(billId: Long): List<Payment> {
         log.info("get all transaction of bill $billId")
         billService.isBillExist(billId = billId)
-        return paymentRepository.findByBillId(billId = billId).toList()
+        return paymentService.getPaymentsByBillId(billId = billId).toList()
     }
 
 }
