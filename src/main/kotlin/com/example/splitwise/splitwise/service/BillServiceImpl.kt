@@ -15,10 +15,18 @@ import org.springframework.stereotype.Service
 @Service
 class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService, private val userBillRepository: UserBillRepository) : BillService {
 
+    /**
+     * object of logger for print the logs
+     */
     companion object {
         private val log: Logger = LoggerFactory.getLogger(BillServiceImpl::class.java)
     }
 
+    /**
+     * function to generate the bill
+     * @param billGenerateDto object which contain the details of bill
+     * @return Bill return the bill object after save
+     */
     override fun generateBill(billGenerateDto: BillGenerateDto): Bill {
         log.info("generate bill with details {}", billGenerateDto)
         var bill = modelMapper.map(billGenerateDto, Bill::class.java)
@@ -29,6 +37,12 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return save;
     }
 
+    /**
+     * fun for adding the bill
+     * @param userIds ids of user which belong to bill
+     * @param billId id of bill
+     * @return Unit
+     */
     private fun addUserBills(userIds: List<Long>?, billId: Long) {
 
         var mutableList: MutableList<UserBill> = mutableListOf()
@@ -40,6 +54,11 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         userBillRepository.saveAll(mutableList);
     }
 
+    /**
+     * fun for validate the user
+     * @param userIds list of user ids which we have to validate
+     * @return Unit
+     */
     private fun validateUser(userIds: List<Long>?) {
         log.info("validate the users $userIds")
         userIds?.forEach { userId ->
@@ -47,12 +66,23 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         }
     }
 
+    /**
+     * fun for getting the bill
+     * @param billId id of bill
+     * @return object of required bill
+     */
     override fun getBill(billId: Long): Bill {
         log.info("get bill with id $billId")
         isBillExist(billId = billId)
         return billRepository.findById(billId).get()
     }
 
+    /**
+     * fun for check the bill if exist or not
+     * @param billId id of bill
+     * @throws BillNotFoundException if bill does not exist
+     * @return Unit
+     */
     override fun isBillExist(billId: Long) {
         log.info("check bill validation with id $billId")
         val existsById = billRepository.existsById(billId)
@@ -61,10 +91,15 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
     }
 
 
+    /**
+     * function for update the bill
+     * @param billUpdateDto details of updating the bill
+     * @return Bill return the bill object after update
+     */
     override fun updateBill(billUpdateDto: BillUpdateDto): Bill {
         log.info("update the bill with details $billUpdateDto")
-        val bill = billRepository.findById(billUpdateDto.billId).orElse(null)
-                ?: throw BillNotFoundException("Bill doesn't exist with id ${billUpdateDto.billId}")
+        isBillExist(billId = billUpdateDto.billId)
+        val bill = billRepository.findById(billUpdateDto.billId).get()
 
         if (billUpdateDto.amount != null) {
             bill.amount = billUpdateDto.amount!!
@@ -81,6 +116,11 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return billRepository.save(bill)
     }
 
+    /**
+     * function for delete the bill
+     * @param billId id of bill
+     * @return true if successfully deleted otherwise false
+     */
     override fun deleteBill(billId: Long): Boolean {
         log.info("delete bill with id $billId")
         isBillExist(billId = billId)
