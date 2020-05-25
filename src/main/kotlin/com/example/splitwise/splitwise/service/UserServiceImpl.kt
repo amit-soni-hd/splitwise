@@ -24,7 +24,6 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         log.info("Creating user with email id : ", userCreationDto.emailId)
         userValidation(userCreationDto)
         val newUser = modelMapper.map(userCreationDto, User::class.java)
-        this.userValidation(userCreationDto);
         return userRepository.save(newUser)
     }
 
