@@ -82,6 +82,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
     }
 
     override fun deleteBill(billId: Long): Boolean {
+        log.info("delete bill with id $billId")
         isBillExist(billId = billId)
         billRepository.run { deleteById(billId) }
         return true
