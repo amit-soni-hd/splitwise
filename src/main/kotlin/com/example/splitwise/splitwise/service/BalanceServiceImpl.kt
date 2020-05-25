@@ -38,8 +38,6 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
         userService.userIdValidation(userId = respectUserId)
         val userBills = findUserBills(userService.getUserBills(userId = userId), respectUserId, userId)
         val respectUserBills = findUserBills(userService.getUserBills(userId = respectUserId), userId, respectUserId)
-        println(userBills.size)
-        println(respectUserBills.size)
 
 
         val debit = getCreditBalance(userBills, respectUserId)

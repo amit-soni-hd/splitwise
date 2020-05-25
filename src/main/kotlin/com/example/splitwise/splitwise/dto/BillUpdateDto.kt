@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class BillUpdateDto(
 
         @JsonProperty("bill_id")
-        val billId:Long,
+        var billId:Long,
 
         @JsonProperty("bill_name")
         var billName: String?,

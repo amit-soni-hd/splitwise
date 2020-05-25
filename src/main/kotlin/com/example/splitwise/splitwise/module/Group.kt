@@ -1,5 +1,6 @@
 package com.example.splitwise.splitwise.module
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -18,7 +19,7 @@ data class Group(
         @Column(name = "created_date_time")
         var date: LocalDateTime,
 
-        @ManyToMany(mappedBy = "groups")
+        @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)
         val involvedUser: MutableList<User> = mutableListOf(),
 
         @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, mappedBy = "group")

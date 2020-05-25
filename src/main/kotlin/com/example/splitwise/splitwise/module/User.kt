@@ -1,5 +1,6 @@
 package com.example.splitwise.splitwise.module
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import javax.persistence.*

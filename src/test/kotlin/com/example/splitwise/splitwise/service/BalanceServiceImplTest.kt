@@ -48,6 +48,7 @@ internal class BalanceServiceImplTest {
 
     @Test
     fun getIndividualBalance() {
+        user.bills.addAll(listOf(bill1, bill2))
         `when`(userService.getUserBills(anyLong())).thenReturn(mutableListOf(bill1, bill2))
         `when`(transactionService.getAllTransactionOfBill(anyLong())).thenReturn(emptyList())
         `when`(userService.getUserById(anyLong())).thenReturn(user)

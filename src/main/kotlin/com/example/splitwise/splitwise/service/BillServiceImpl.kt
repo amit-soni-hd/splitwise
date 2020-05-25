@@ -21,10 +21,21 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
     override fun generateBill(billGenerateDto: BillGenerateDto): Bill {
         log.info("generate bill with details $billGenerateDto")
         val bill = modelMapper.map(billGenerateDto, Bill::class.java)
+        addUserInBill(billGenerateDto.involvedUserIds?.toList(), bill)
         validateUser(billGenerateDto.involvedUser)
         billRepository.save(bill)
         splitBill(bill = bill)
         return bill
+    }
+
+    private fun addUserInBill(billsId:List<Long>?, bill: Bill) {
+
+        billsId?.forEach { id ->
+            run {
+                val userById = userService.getUserById(userId = id)
+                bill.involvedUser.add(userById)
+            }
+        }
     }
 
     private fun validateUser(users: List<User>) {

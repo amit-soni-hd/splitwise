@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/bill")
@@ -17,6 +18,7 @@ class BillController(val billService: BillService) {
 
     @PostMapping("/")
     fun generateBill(@RequestBody billGenerateDto: BillGenerateDto): ResponseEntity<ResponseDto> {
+        billGenerateDto.date = LocalDateTime.now()
         val generateBill = billService.generateBill(billGenerateDto)
         var response = ResponseDto("Successfully generated", generateBill, HttpStatus.CREATED)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)

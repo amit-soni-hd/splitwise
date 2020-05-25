@@ -9,7 +9,7 @@ import javax.persistence.*
 class BillGenerateDto(
 
         @JsonProperty("owner_id")
-        val ownerId:Long,
+        var ownerId:Long,
 
         @JsonProperty("bill_name")
         var billName: String,
@@ -21,7 +21,10 @@ class BillGenerateDto(
         var amount: Double,
 
         @JsonProperty("date_time")
-        var date: LocalDateTime,
+        var date: LocalDateTime? = null,
+
+        @JsonProperty(value = "involved_user_ids")
+        var involvedUserIds: MutableList<Long>? = null,
 
         @JsonProperty("involved_user")
         val involvedUser: MutableList<User> = mutableListOf(),

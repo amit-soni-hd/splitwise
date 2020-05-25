@@ -1,9 +1,11 @@
 package com.example.splitwise.splitwise.module
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
+@Table(name = "bill")
 data class Bill(
 
         @Id
@@ -26,7 +28,7 @@ data class Bill(
         @Column(name = "date_time")
         var date: LocalDateTime,
 
-        @ManyToMany(mappedBy = "bills")
+        @ManyToMany(mappedBy = "bills",fetch = FetchType.EAGER)
         var involvedUser: MutableList<User> = mutableListOf(),
 
         @ManyToOne(fetch = FetchType.LAZY, optional = true)

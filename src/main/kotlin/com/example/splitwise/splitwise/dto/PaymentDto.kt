@@ -7,19 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class PaymentDto(
 
         @JsonProperty("bill_id", required = true)
-        val billId: Long,
+        var billId: Long,
 
         @JsonProperty("payer_id", required = true)
-        val payerId: Long,
+        var payerId: Long,
 
         @JsonProperty("receiver_id", required = true)
-        val receiverId: Long,
+        var receiverId: Long,
 
         @JsonProperty("amount", required = true)
-        val amount: Double,
+        var amount: Double,
 
         @JsonProperty("payment_type", required = true)
-        val paymentType: PaymentType,
+        var paymentType: PaymentType,
 
         @JsonProperty("payment_status")
         var paymentStatus: PaymentStatus = PaymentStatus.PENDING

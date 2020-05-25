@@ -3,6 +3,7 @@ package com.example.splitwise.splitwise.service
 import com.example.splitwise.splitwise.enum.PaymentStatus
 import com.example.splitwise.splitwise.enum.PaymentType
 import com.example.splitwise.splitwise.module.Payment
+import com.example.splitwise.splitwise.repository.PaymentRepository
 import com.nhaarman.mockito_kotlin.doNothing
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -26,7 +27,7 @@ class TransactionServiceImplTest {
     @Mock
     private lateinit var billService: BillServiceImpl
     @Mock
-    private lateinit var paymentService: PaymentServiceImpl
+    private lateinit var paymentRepository: PaymentRepository
 
     companion object {
         var payment = Payment(paymentId = 1, billId = 1, payerId = 1, receiverId = 1,
@@ -40,7 +41,7 @@ class TransactionServiceImplTest {
     @Test
     @DisplayName("get all transaction of user")
     fun getAllTransaction() {
-        `when`(paymentService.getPaymentsByPayerId(anyLong())).thenReturn(listOf(payment))
+        `when`(paymentRepository.findByPayerId(anyLong())).thenReturn(listOf(payment))
         val allTransaction = transactionService.getAllTransaction(1)
         assertAll("check user transactions",
                 { assertEquals(allTransaction.get(0).amount, payment.amount)},
@@ -53,7 +54,7 @@ class TransactionServiceImplTest {
     @DisplayName("get all transaction of bill")
     fun getAllTransactionOfBill() {
         doNothing().`when`(billService).isBillExist(anyLong())
-        `when`(paymentService.getPaymentsByBillId(anyLong())).thenReturn(listOf(payment))
+        `when`(paymentRepository.findByBillId(anyLong())).thenReturn(listOf(payment))
         val allTransactionOfBill = transactionService.getAllTransactionOfBill(1)
         assertAll("check all transaction of bill",
                 { assertEquals(allTransactionOfBill.get(0).paymentId, payment.paymentId)},
