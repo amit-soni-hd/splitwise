@@ -16,7 +16,7 @@ class BalanceServiceImpl(private val billService: BillService, private val userB
 
     override fun getTotalBalance(userId: Long): Map<String, Double> {
         log.info("Get total balance with user id $userId")
-        val userBills = getAllBills(userBillService.getBillsByUserId(userId = userId))
+        val userBills = getAllBills(userBillService.getBillIdsByUserId(userId = userId))
         val debitBills = mutableListOf<Bill>()
         val creditBills = mutableListOf<Bill>()
 
@@ -49,7 +49,7 @@ class BalanceServiceImpl(private val billService: BillService, private val userB
         log.info("get individual balance for user $userId to respect user $respectUserId")
         userService.userIdValidation(userId = userId)
         userService.userIdValidation(userId = respectUserId)
-        val billsByUserId = userBillService.getBillsByUserId(userId = userId)
+        val billsByUserId = userBillService.getBillIdsByUserId(userId = userId)
         val userBills = findUserBills(getAllBills(billsByUserId), userId)
         val respectUserBills = findUserBills(getAllBills(billsByUserId), respectUserId)
 

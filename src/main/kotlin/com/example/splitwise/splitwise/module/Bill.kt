@@ -28,7 +28,7 @@ data class Bill(
         var date: LocalDateTime,
 
         @Column(name = "no_of_user")
-        var noOfUser:Long
+        var noOfUser:Long = 0
 
 )
 

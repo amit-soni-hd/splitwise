@@ -41,7 +41,7 @@ internal class BalanceServiceImplTest {
 
     @Test
     fun getTotalBalance() {
-        `when`(userBillService.getBillsByUserId(userId = anyLong())).thenReturn(mutableListOf(userBill1, userBill2, userBill3))
+        `when`(userBillService.getBillIdsByUserId(userId = anyLong())).thenReturn(mutableListOf(userBill1, userBill2, userBill3))
         `when`(billService.getBill(billId = 1)).thenReturn(bill1)
         `when`(billService.getBill(billId = 2)).thenReturn(bill2)
         `when`(billService.getBill(billId = 3)).thenReturn(bill3)
@@ -56,7 +56,7 @@ internal class BalanceServiceImplTest {
 
     @Test
     fun getIndividualBalance() {
-        `when`(userBillService.getBillsByUserId(userId = anyLong())).thenReturn(mutableListOf(userBill1, userBill2))
+        `when`(userBillService.getBillIdsByUserId(userId = anyLong())).thenReturn(mutableListOf(userBill1, userBill2))
         `when`(billService.getBill(billId = 1)).thenReturn(bill1)
         `when`(billService.getBill(billId = 2)).thenReturn(bill2)
         `when`(transactionService.getAllTransactionOfBill(anyLong())).thenReturn(emptyList())

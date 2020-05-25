@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service
 @Service
 class UserBillServiceImpl(private val userBillRepository: UserBillRepository) : UserBillService {
 
-    override fun getBillsByBillId(billId:Long): List<UserBill> {
+    override fun getUserIdsByBillId(billId:Long): List<UserBill> {
         return userBillRepository.findAllByBillId(billId = billId).toList()
     }
 
-    override fun getBillsByUserId(userId:Long): List<UserBill> {
+    override fun getBillIdsByUserId(userId:Long): List<UserBill> {
         return userBillRepository.findAllByUserId(userId = userId).toList()
     }
 

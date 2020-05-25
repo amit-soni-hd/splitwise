@@ -34,7 +34,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         var mutableList: MutableList<UserBill> = mutableListOf()
         userIds?.forEach { id ->
             run {
-                mutableList.add(UserBill(0, id, billId))
+                mutableList.add(UserBill(userId = id, billId = billId))
             }
         }
         userBillRepository.saveAll(mutableList);
@@ -78,9 +78,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         if (billUpdateDto.description != null) {
             bill.description = billUpdateDto.description!!
         }
-        billRepository.save(bill)
-        return bill
-
+        return billRepository.save(bill)
     }
 
 
