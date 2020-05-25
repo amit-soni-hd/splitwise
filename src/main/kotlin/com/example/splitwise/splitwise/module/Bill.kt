@@ -1,6 +1,5 @@
 package com.example.splitwise.splitwise.module
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -11,10 +10,10 @@ data class Bill(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "bill_id")
-        val billId: Long,
+        var billId: Long,
 
         @Column(name = "owner_id")
-        val ownerId:Long,
+        var ownerId:Long,
 
         @Column(name = "bill_name")
         var billName:String,
@@ -28,11 +27,8 @@ data class Bill(
         @Column(name = "date_time")
         var date: LocalDateTime,
 
-        @ManyToMany(mappedBy = "bills",fetch = FetchType.EAGER)
-        var involvedUser: MutableList<User> = mutableListOf(),
+        @Column(name = "no_of_user")
+        var noOfUser:Long
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = true)
-        @JoinColumn(name = "group_id")
-        var group:Group? = null
 )
 

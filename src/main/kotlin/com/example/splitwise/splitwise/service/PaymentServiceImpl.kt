@@ -26,7 +26,7 @@ class PaymentServiceImpl(private val transactionService: TransactionService, pri
 
         var payment = modelMapper.map(paymentDto, Payment::class.java)
         val bill = billService.getBill(billId = paymentDto.billId)
-        var userShare = bill.amount.div(bill.involvedUser.size)
+        var userShare = bill.amount.div(bill.noOfUser)
         var paidAmount = findPaidAmount(bill.billId, paymentDto.payerId)
         var dueAmount = userShare.minus(paidAmount)
 

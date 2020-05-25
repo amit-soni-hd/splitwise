@@ -2,12 +2,13 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.Payment
+import com.example.splitwise.splitwise.module.UserBill
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BalanceServiceImpl(private val userService: UserService, private val transactionService: TransactionService) : BalanceService {
+class BalanceServiceImpl(private val billService: BillService, private val userBillService: UserBillService, val userService: UserService, private val transactionService: TransactionService) : BalanceService {
 
     companion object {
         private var log: Logger = LoggerFactory.getLogger(BalanceServiceImpl::class.java)
@@ -15,7 +16,7 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
 
     override fun getTotalBalance(userId: Long): Map<String, Double> {
         log.info("Get total balance with user id $userId")
-        val userBills = userService.getUserBills(userId = userId)
+        val userBills = getAllBills(userBillService.getBillsByUserId(userId = userId))
         val debitBills = mutableListOf<Bill>()
         val creditBills = mutableListOf<Bill>()
 
@@ -32,12 +33,25 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
         return mapOf("Credit" to credit, "Debit" to debit)
     }
 
+    private fun getAllBills(userBills: List<UserBill>): MutableList<Bill> {
+
+        var billList: MutableList<Bill> = mutableListOf()
+        userBills.forEach { userBill ->
+            run {
+                val bill = billService.getBill(userBill.billId)
+                billList.add(bill)
+            }
+        }
+        return billList
+    }
+
     override fun getIndividualBalance(userId: Long, respectUserId: Long): Map<String, Double> {
         log.info("get individual balance for user $userId to respect user $respectUserId")
         userService.userIdValidation(userId = userId)
         userService.userIdValidation(userId = respectUserId)
-        val userBills = findUserBills(userService.getUserBills(userId = userId), respectUserId, userId)
-        val respectUserBills = findUserBills(userService.getUserBills(userId = respectUserId), userId, respectUserId)
+        val billsByUserId = userBillService.getBillsByUserId(userId = userId)
+        val userBills = findUserBills(getAllBills(billsByUserId), userId)
+        val respectUserBills = findUserBills(getAllBills(billsByUserId), respectUserId)
 
 
         val debit = getCreditBalance(userBills, respectUserId)
@@ -47,7 +61,7 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
 
     }
 
-    private fun getDebitBalance(bills: List<Bill>, receiverId:Long): Double {
+    private fun getDebitBalance(bills: List<Bill>, receiverId: Long): Double {
         log.info("get debit balance with user id $receiverId")
         var balance = 0.0
         bills.forEach { bill ->
@@ -56,7 +70,7 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
                     .filter { payment: Payment -> payment.receiverId == receiverId }
                     .map { payment: Payment -> payment.amount }
                     .sum()
-            balance += bill.amount - sum - bill.amount.div(bill.involvedUser.size)
+            balance += bill.amount - sum - bill.amount.div(bill.noOfUser)
         }
         return balance
     }
@@ -70,15 +84,14 @@ class BalanceServiceImpl(private val userService: UserService, private val trans
                     .filter { payment: Payment -> payment.payerId == payerId }
                     .map { payment: Payment -> payment.amount }
                     .sum()
-            balance += bill.amount - sum - bill.amount.div(bill.involvedUser.size)
+            balance += bill.amount - sum - bill.amount.div(bill.noOfUser)
         }
         return balance
     }
 
-    private fun findUserBills(bills: List<Bill>, involvedUserId:Long, billOwnerId:Long): List<Bill> {
+    private fun findUserBills(bills: List<Bill>, billOwnerId: Long): List<Bill> {
         return bills.filter { bill: Bill ->
-            val user = userService.getUserById(involvedUserId)
-            bill.involvedUser.contains(user) && bill.ownerId == billOwnerId
+            bill.ownerId == billOwnerId
         }
     }
 }

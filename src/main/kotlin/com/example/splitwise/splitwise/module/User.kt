@@ -1,5 +1,7 @@
 package com.example.splitwise.splitwise.module
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -12,7 +14,7 @@ data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "user_id")
-        val userId: Long,
+        var userId: Long,
 
         @Column(name = "user_email", nullable = false, unique = true)
         var emailId: String,
@@ -21,19 +23,6 @@ data class User(
         var name: String,
 
         @Column(name = "user_contact", nullable = false, unique = true)
-        var contact: String,
+        var contact: String
 
-        @ManyToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
-        @Fetch(FetchMode.SELECT)
-        @JoinTable(name = "user_bills",
-                joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
-                inverseJoinColumns = arrayOf(JoinColumn(name = "bill_id", referencedColumnName = "bill_id")))
-        val bills: MutableList<Bill> = mutableListOf(),
-
-        @ManyToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
-        @Fetch(FetchMode.SELECT)
-        @JoinTable(name = "user_groups",
-                joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "user_id")),
-                inverseJoinColumns = arrayOf(JoinColumn(name = "group_id", referencedColumnName = "group_id")))
-        val groups: MutableList<Group> = mutableListOf()
 )

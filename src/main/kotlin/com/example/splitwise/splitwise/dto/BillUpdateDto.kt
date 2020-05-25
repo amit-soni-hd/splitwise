@@ -20,11 +20,5 @@ class BillUpdateDto(
         var amount: Double?,
 
         @JsonProperty("date_time")
-        var date: LocalDateTime?,
-
-        @JsonProperty("involved_user")
-        var involvedUser: MutableList<User>? = mutableListOf(),
-
-        @JsonProperty("group")
-        var group: Group?
+        var date: LocalDateTime?
 )

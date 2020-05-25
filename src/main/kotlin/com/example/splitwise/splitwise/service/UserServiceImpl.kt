@@ -10,6 +10,7 @@ import com.example.splitwise.splitwise.repository.UserRepository
 import org.modelmapper.ModelMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.stereotype.Service
 
 @Service
@@ -94,20 +95,6 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
             userRepository.deleteById(userId)
         else throw UserNotFoundException("User doesn't  exist with id $userId")
         return true
-    }
-
-    override fun addUserBill(userId: Long, bill: Bill): User {
-        log.info("Add bill with user id $userId and bill $bill")
-        userIdValidation(userId)
-        val user = userRepository.findById(userId).get()
-        user.bills.add(bill)
-        return userRepository.save(user)
-    }
-
-    override fun getUserBills(userId: Long): MutableList<Bill> {
-        log.info("Get user bill with user id $userId")
-        userIdValidation(userId = userId)
-        return userRepository.findById(userId).get().bills
     }
 
     override fun getUserByEmail(emailId: String): User {

@@ -4,44 +4,46 @@ import com.example.splitwise.splitwise.dto.BillGenerateDto
 import com.example.splitwise.splitwise.dto.BillUpdateDto
 import com.example.splitwise.splitwise.exception.BillNotFoundException
 import com.example.splitwise.splitwise.module.Bill
-import com.example.splitwise.splitwise.module.User
+import com.example.splitwise.splitwise.module.UserBill
 import com.example.splitwise.splitwise.repository.BillRepository
+import com.example.splitwise.splitwise.repository.UserBillRepository
 import org.modelmapper.ModelMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService) : BillService {
+class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService, private val userBillRepository: UserBillRepository) : BillService {
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(BillServiceImpl::class.java)
     }
 
     override fun generateBill(billGenerateDto: BillGenerateDto): Bill {
-        log.info("generate bill with details $billGenerateDto")
-        val bill = modelMapper.map(billGenerateDto, Bill::class.java)
-        addUserInBill(billGenerateDto.involvedUserIds?.toList(), bill)
-        validateUser(billGenerateDto.involvedUser)
-        billRepository.save(bill)
-        splitBill(bill = bill)
-        return bill
+        log.info("generate bill with details {}", billGenerateDto)
+        var bill = modelMapper.map(billGenerateDto, Bill::class.java)
+        validateUser(billGenerateDto.involvedUserIds)
+        bill.noOfUser = billGenerateDto.involvedUserIds?.size?.toLong()!!
+        val save = billRepository.save(bill)
+        addUserBills(billGenerateDto.involvedUserIds, billId = save.billId)
+        return save;
     }
 
-    private fun addUserInBill(billsId:List<Long>?, bill: Bill) {
+    private fun addUserBills(userIds: List<Long>?, billId: Long) {
 
-        billsId?.forEach { id ->
+        var mutableList: MutableList<UserBill> = mutableListOf()
+        userIds?.forEach { id ->
             run {
-                val userById = userService.getUserById(userId = id)
-                bill.involvedUser.add(userById)
+                mutableList.add(UserBill(0, id, billId))
             }
         }
+        userBillRepository.saveAll(mutableList);
     }
 
-    private fun validateUser(users: List<User>) {
-        log.info("validate the users $users")
-        users.forEach { user ->
-            userService.userIdValidation(user.userId)
+    private fun validateUser(userIds: List<Long>?) {
+        log.info("validate the users $userIds")
+        userIds?.forEach { userId ->
+            userService.userIdValidation(userId)
         }
     }
 
@@ -58,13 +60,6 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
             throw BillNotFoundException("Bill does not exist with id $billId")
     }
 
-    private fun splitBill(bill: Bill) {
-        log.info("Split the bill in users ${bill.involvedUser}")
-        bill.involvedUser
-                .forEach { user ->
-                    userService.addUserBill(userId = user.userId, bill = bill)
-                }
-    }
 
     override fun updateBill(billUpdateDto: BillUpdateDto): Bill {
         log.info("update the bill with details $billUpdateDto")
@@ -82,12 +77,6 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         }
         if (billUpdateDto.description != null) {
             bill.description = billUpdateDto.description!!
-        }
-        if (billUpdateDto.involvedUser != null) {
-            bill.involvedUser = billUpdateDto.involvedUser!!
-        }
-        if (billUpdateDto.group != null) {
-            bill.group = billUpdateDto.group
         }
         billRepository.save(bill)
         return bill
