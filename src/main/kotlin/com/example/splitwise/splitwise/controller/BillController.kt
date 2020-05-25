@@ -16,6 +16,11 @@ import java.time.LocalDateTime
 class BillController(val billService: BillService) {
 
 
+    /**
+     * post api for generate the bill
+     * @param billGenerateDto is the object which contain the details of bill
+     * @return ResponseEntity with response if bill was successfully created
+     */
     @PostMapping("/")
     fun generateBill(@RequestBody billGenerateDto: BillGenerateDto): ResponseEntity<ResponseDto> {
         billGenerateDto.date = LocalDateTime.now()
@@ -24,6 +29,11 @@ class BillController(val billService: BillService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
+    /**
+     * get api for get the bill
+     * @param billId bill id for getting the bill
+     * @return ResponseEntity with response if bill was successfully fetched
+     */
     @GetMapping("/{billId}")
     fun getBill(@PathVariable(value = "billId") billId: Long): ResponseEntity<ResponseDto> {
         val bill = billService.getBill(billId)
@@ -32,13 +42,23 @@ class BillController(val billService: BillService) {
 
     }
 
+    /**
+     * put api for update  the bill
+     * @param billUpdateDto is the object which contain the details of bill updating
+     * @return ResponseEntity with response if bill was successfully update
+     */
     @PutMapping("/")
     fun updateBill(billUpdateDto: BillUpdateDto): ResponseEntity<ResponseDto> {
         val bill = billService.updateBill(billUpdateDto = billUpdateDto)
         val response = ResponseDto("Successfully update  bill ", bill, HttpStatus.NOT_FOUND)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
-    
+
+    /**
+     * delete api for delete  the bill
+     * @param billId id of bill for delete the bill
+     * @return ResponseEntity with response if bill was successfully deleted
+     */
     @DeleteMapping("/{billId}")
     fun deleteBill(@PathVariable("billId") billId: Long): ResponseEntity<ResponseDto> {
         val deleteBill = billService.deleteBill(billId = billId)
