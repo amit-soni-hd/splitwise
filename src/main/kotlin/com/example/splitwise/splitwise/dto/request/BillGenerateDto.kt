@@ -1,4 +1,4 @@
-package com.example.splitwise.splitwise.dto
+package com.example.splitwise.splitwise.dto.request
 
 import com.example.splitwise.splitwise.module.Group
 import com.example.splitwise.splitwise.module.User

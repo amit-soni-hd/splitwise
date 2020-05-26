@@ -25,11 +25,12 @@ data class Payment(
         val amount: Double,
 
         @Column(name = "payment_type", nullable = false)
-        val paymentType: PaymentType,
+        var paymentType: PaymentType,
 
         @Column(name = "payment_due")
         var paymentDue: Double? = null,
 
         @Column(name = "payment_status")
+        @Enumerated(value = EnumType.STRING)
         var paymentStatus: PaymentStatus = PaymentStatus.PENDING
 )

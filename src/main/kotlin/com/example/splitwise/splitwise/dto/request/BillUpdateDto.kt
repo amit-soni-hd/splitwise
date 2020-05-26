@@ -1,4 +1,4 @@
-package com.example.splitwise.splitwise.dto
+package com.example.splitwise.splitwise.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
@@ -18,5 +18,8 @@ class BillUpdateDto(
         var amount: Double?,
 
         @JsonProperty("date_time")
-        var date: LocalDateTime?
+        var date: LocalDateTime?,
+
+        @JsonProperty("group_id")
+        var groupId :Long?
 )

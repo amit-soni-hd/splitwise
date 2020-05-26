@@ -1,5 +1,6 @@
 package com.example.splitwise.splitwise.module
 
+import com.example.splitwise.splitwise.enum.BillStatus
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -13,10 +14,10 @@ data class Bill(
         var billId: Long,
 
         @Column(name = "owner_id")
-        var ownerId:Long,
+        var ownerId: Long,
 
         @Column(name = "bill_name")
-        var billName:String,
+        var billName: String,
 
         @Column(name = "bill_description")
         var description: String,
@@ -28,7 +29,14 @@ data class Bill(
         var date: LocalDateTime,
 
         @Column(name = "no_of_user")
-        var noOfUser:Long = 0
+        var noOfUser: Long = 0,
+
+        @Column(name = "group_Id", nullable = true)
+        var groupId: Long? = null,
+
+        @Column(name = "bill_status")
+        @Enumerated(value = EnumType.STRING)
+        var billStatus: BillStatus = BillStatus.PRESENT
 
 )
 

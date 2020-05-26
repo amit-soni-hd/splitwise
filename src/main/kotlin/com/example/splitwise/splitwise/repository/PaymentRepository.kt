@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository
 @EnableJpaRepositories
 interface PaymentRepository : JpaRepository<Payment, Long> {
 
-    fun findByBillId(billId:Long) : Iterable<Payment>
-    fun findByPayerId(userId:Long) : Iterable<Payment>
+    fun findAllByBillId(billId: Long): Iterable<Payment>
+    fun findAllByPayerIdOrReceiverId(payerId: Long, receiverId: Long): Iterable<Payment>
+    fun findAllByPayerId(payerId: Long): Iterable<Payment>
+    fun findAllByReceiverId(receiverId: Long): Iterable<Payment>
+    fun findByPayerIdAndBillId(userId: Long, billId: Long): Iterable<Payment>
 }

@@ -1,6 +1,6 @@
 package com.example.splitwise.splitwise.exception
 
-import com.example.splitwise.splitwise.dto.ResponseDto
+import com.example.splitwise.splitwise.dto.response.ResponseDto
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

@@ -1,8 +1,8 @@
 package com.example.splitwise.splitwise.controller
 
-import com.example.splitwise.splitwise.dto.ResponseDto
-import com.example.splitwise.splitwise.dto.UserCreationDto
-import com.example.splitwise.splitwise.dto.UserUpdateDto
+import com.example.splitwise.splitwise.dto.response.ResponseDto
+import com.example.splitwise.splitwise.dto.request.UserCreationDto
+import com.example.splitwise.splitwise.dto.request.UserUpdateDto
 import com.example.splitwise.splitwise.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

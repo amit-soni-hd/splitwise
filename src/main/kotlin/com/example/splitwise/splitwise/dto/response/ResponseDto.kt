@@ -1,4 +1,4 @@
-package com.example.splitwise.splitwise.dto
+package com.example.splitwise.splitwise.dto.response
 
 import org.springframework.http.HttpStatus
 

@@ -1,16 +1,14 @@
 package com.example.splitwise.splitwise.service
 
-import com.example.splitwise.splitwise.dto.UserCreationDto
-import com.example.splitwise.splitwise.dto.UserUpdateDto
+import com.example.splitwise.splitwise.dto.request.UserCreationDto
+import com.example.splitwise.splitwise.dto.request.UserUpdateDto
 import com.example.splitwise.splitwise.exception.UserExistException
 import com.example.splitwise.splitwise.exception.UserNotFoundException
-import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.User
 import com.example.splitwise.splitwise.repository.UserRepository
 import org.modelmapper.ModelMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.stereotype.Service
 
 @Service
@@ -92,7 +90,7 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
         log.info("Deleting user with id {}", userId)
         if (userRepository.existsById(userId))
             userRepository.deleteById(userId)
-        else throw UserNotFoundException("User doesn't  exist with id $userId")
+        else throw UserNotFoundException("User doesn't  exist with user id $userId")
         return true
     }
 

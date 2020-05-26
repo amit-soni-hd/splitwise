@@ -1,8 +1,7 @@
 package com.example.splitwise.splitwise.service
 
-import com.example.splitwise.splitwise.dto.UserCreationDto
-import com.example.splitwise.splitwise.dto.UserUpdateDto
-import com.example.splitwise.splitwise.module.Bill
+import com.example.splitwise.splitwise.dto.request.UserCreationDto
+import com.example.splitwise.splitwise.dto.request.UserUpdateDto
 import com.example.splitwise.splitwise.module.User
 
 interface UserService {

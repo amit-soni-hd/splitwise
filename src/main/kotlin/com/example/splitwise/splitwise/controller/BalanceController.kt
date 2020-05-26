@@ -1,9 +1,7 @@
 package com.example.splitwise.splitwise.controller
 
-import com.example.splitwise.splitwise.dto.ResponseDto
+import com.example.splitwise.splitwise.dto.response.ResponseDto
 import com.example.splitwise.splitwise.service.BalanceService
-import com.example.splitwise.splitwise.service.BalanceServiceImpl
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

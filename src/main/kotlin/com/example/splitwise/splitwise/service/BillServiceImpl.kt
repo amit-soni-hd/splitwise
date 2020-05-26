@@ -1,7 +1,9 @@
 package com.example.splitwise.splitwise.service
 
-import com.example.splitwise.splitwise.dto.BillGenerateDto
-import com.example.splitwise.splitwise.dto.BillUpdateDto
+import com.example.splitwise.splitwise.dto.request.BillGenerateDto
+import com.example.splitwise.splitwise.dto.request.BillUpdateDto
+import com.example.splitwise.splitwise.enum.BillStatus
+import com.example.splitwise.splitwise.enum.PaymentStatus
 import com.example.splitwise.splitwise.exception.BillNotFoundException
 import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.UserBill
@@ -29,12 +31,21 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
      */
     override fun generateBill(billGenerateDto: BillGenerateDto): Bill {
         log.info("generate bill with details {}", billGenerateDto)
-        var bill = modelMapper.map(billGenerateDto, Bill::class.java)
+        val bill = modelMapper.map(billGenerateDto, Bill::class.java)
         validateUser(billGenerateDto.involvedUserIds)
         bill.noOfUser = billGenerateDto.involvedUserIds?.size?.toLong()!!
         val save = billRepository.save(bill)
-        addUserBills(billGenerateDto.involvedUserIds, billId = save.billId)
+        addUserBills(billGenerateDto.involvedUserIds, save)
         return save;
+    }
+
+    override fun includeNewUsers(userIds: List<Long>, billId: Long) {
+        isBillExist(billId = billId)
+        userIds.forEach { userId -> userService.userIdValidation(userId = userId) }
+        val bill = billRepository.findById(billId).get()
+        bill.noOfUser += userIds.size
+        updateOldUsersBill(bill = bill)
+        addUserBills(userIds = userIds, bill = bill)
     }
 
     /**
@@ -43,15 +54,18 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
      * @param billId id of bill
      * @return Unit
      */
-    private fun addUserBills(userIds: List<Long>?, billId: Long) {
+    private fun addUserBills(userIds: List<Long>?, bill: Bill) {
 
-        var mutableList: MutableList<UserBill> = mutableListOf()
+        val mutableList: MutableList<UserBill> = mutableListOf()
         userIds?.forEach { id ->
-            run {
-                mutableList.add(UserBill(userId = id, billId = billId))
-            }
+            if (bill.ownerId != id)
+                run {
+                    mutableList.add(UserBill(userId = id, billId = bill.billId,
+                            userShare = bill.amount.div(bill.noOfUser), dueAmount = bill.amount.div(bill.noOfUser),
+                            groupId = bill.groupId, ownerId = bill.ownerId))
+                }
         }
-        userBillRepository.saveAll(mutableList);
+        userBillRepository.saveAll(mutableList)
     }
 
     /**
@@ -86,7 +100,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
     override fun isBillExist(billId: Long) {
         log.info("check bill validation with id $billId")
         val existsById = billRepository.existsById(billId)
-        if(!existsById)
+        if (!existsById)
             throw BillNotFoundException("Bill does not exist with id $billId")
     }
 
@@ -101,18 +115,21 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         isBillExist(billId = billUpdateDto.billId)
         val bill = billRepository.findById(billUpdateDto.billId).get()
 
-        if (billUpdateDto.amount != null) {
+        if (billUpdateDto.amount != null)
             bill.amount = billUpdateDto.amount!!
-        }
-        if (billUpdateDto.billName != null) {
+
+        if (billUpdateDto.billName != null)
             bill.description = billUpdateDto.description!!
-        }
-        if (billUpdateDto.date != null) {
+
+        if (billUpdateDto.date != null)
             bill.date = billUpdateDto.date!!
-        }
-        if (billUpdateDto.description != null) {
+
+        if (billUpdateDto.description != null)
             bill.description = billUpdateDto.description!!
-        }
+
+        if (billUpdateDto.groupId != null)
+            bill.groupId = billUpdateDto.groupId
+        updateOldUsersBill(bill = bill)
         return billRepository.save(bill)
     }
 
@@ -121,12 +138,38 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
      * @param billId id of bill
      * @return true if successfully deleted otherwise false
      */
-    override fun deleteBill(billId: Long): Boolean {
+    override fun deleteBill(billId: Long): Bill {
         log.info("delete bill with id $billId")
         isBillExist(billId = billId)
-        billRepository.run { deleteById(billId) }
-        return true
+        val bill = billRepository.findById(billId).get()
+        bill.billStatus = BillStatus.DELETED
+        return billRepository.save(bill)
     }
 
+    override fun undoBill(billId: Long): Bill {
+        isBillExist(billId = billId)
+        val bill = billRepository.findById(billId).get()
+        bill.billStatus = BillStatus.PRESENT
+        return billRepository.save(bill)
+    }
+
+    private fun updateOldUsersBill(bill: Bill) {
+        val usersBill = userBillRepository.findAllByBillId(billId = bill.billId)
+        val usersUpdateBill = mutableListOf<UserBill>()
+        usersBill.forEach { userBill ->
+            run {
+                userBill.groupId = bill.groupId
+                val paidBalance = userBill.userShare - userBill.dueAmount
+                userBill.userShare = bill.amount.div(bill.noOfUser)
+                userBill.dueAmount = userBill.userShare - paidBalance
+                if (userBill.dueAmount <= 0)
+                    userBill.paymentStatus = PaymentStatus.COMPLETE
+                else
+                    userBill.paymentStatus = PaymentStatus.PENDING
+                usersUpdateBill.add(userBill)
+            }
+        }
+        userBillRepository.saveAll(usersUpdateBill)
+    }
 
 }
