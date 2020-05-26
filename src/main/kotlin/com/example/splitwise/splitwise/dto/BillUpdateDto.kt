@@ -1,7 +1,5 @@
 package com.example.splitwise.splitwise.dto
 
-import com.example.splitwise.splitwise.module.Group
-import com.example.splitwise.splitwise.module.User
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 
