@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/payment")
 class PaymentController(val paymentService: PaymentService) {
 
+    /**
+     * post api for pay the bill
+     * @param paymentDto details for pay the bill
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @PostMapping("/")
     fun payBill(@RequestBody paymentDto: PaymentDto): ResponseEntity<ResponseDto> {
         val payBill = paymentService.payBill(paymentDto = paymentDto)
@@ -18,6 +23,11 @@ class PaymentController(val paymentService: PaymentService) {
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
+    /**
+     * get api for getting all transaction of user
+     * @param userId
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @GetMapping("/user/{userId}")
     fun getAllTransaction(@PathVariable("userId") userId: Long): ResponseEntity<ResponseDto> {
         val allTransaction = paymentService.getAllTransactionByUserId(userId = userId)
@@ -25,6 +35,11 @@ class PaymentController(val paymentService: PaymentService) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
+    /**
+     * get api for getting the all transaction of bill
+     * @param billId
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @GetMapping("/bill/{billId}")
     fun getAllTransactionOfBill(@PathVariable("billId") billId: Long): ResponseEntity<ResponseDto> {
         val allTransactionOfBill = paymentService.getPaymentsByBillId(billId = billId)

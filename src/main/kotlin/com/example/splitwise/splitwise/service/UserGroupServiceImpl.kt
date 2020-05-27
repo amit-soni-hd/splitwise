@@ -19,6 +19,11 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
         private var log: Logger = LoggerFactory.getLogger(UserGroupServiceImpl::class.java)
     }
 
+    /**
+     * function for creating the group
+     * @param userGroupDto details for creating the group
+     * @return object of created group
+     */
     override fun createGroup(userGroupDto: UserGroupDto): Group {
         userService.validateUsers(users = userGroupDto.users)
         val group = groupRepository.save(Group(groupName = userGroupDto.groupName, date = LocalDateTime.now()))
@@ -32,6 +37,11 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
         return group
     }
 
+    /**
+     * fun for adding the bill in group
+     * @param groupId id of group
+     * @param billId id of bill
+     */
     override fun addGroupBill(groupId: Long, billId: Long): Bill {
         isGroupExist(groupId = groupId)
         billService.isBillExist(billId = billId)
@@ -46,12 +56,22 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
         return bill
     }
 
+    /**
+     * private function for checking the bill is available or not
+     * @param groupId id of group
+     * @throws throw GroupNotFoundException if group does not exist
+     */
     private fun isGroupExist(groupId: Long) {
         val existsById = groupRepository.existsById(groupId)
         if (!existsById)
             throw GroupNotFoundException("Group not found with id $groupId")
     }
 
+    /**
+     * fun for get debts of a user
+     * @param groupId id of group
+     * @return mutable map of details of debts of a group
+     */
     override fun getDebts(groupId: Long): MutableMap<Long, Double> {
         isGroupExist(groupId = groupId)
         val users = userGroupRepository.findAllByGroupId(groupId = groupId)

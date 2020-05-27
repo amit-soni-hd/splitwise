@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/group")
 class GroupController(private val userGroupService: UserGroupService) {
 
+    /**
+     * post api for create the new group
+     * @param userGroupDto details for creating the new user
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @PostMapping("/create")
     fun createGroup(@RequestBody userGroupDto: UserGroupDto): ResponseEntity<ResponseDto> {
         val group = userGroupService.run { createGroup(userGroupDto = userGroupDto) }
@@ -18,6 +23,12 @@ class GroupController(private val userGroupService: UserGroupService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
+    /**
+     * post api for add the bill with a group
+     * @param billId
+     * @param groupId
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @PostMapping("/add/bill/{bill_id}/group/{group_id}")
     fun addBill(@PathVariable(value = "bill_id") billId: Long, @PathVariable(value = "group_id") groupId: Long): ResponseEntity<ResponseDto> {
         val bill = userGroupService.run { addGroupBill(groupId = groupId, billId = billId) }
@@ -25,6 +36,11 @@ class GroupController(private val userGroupService: UserGroupService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
+    /**
+     * get api for get debts of a user
+     * @param groupId
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @GetMapping("/balance/{group_id}")
     fun getDebts(@PathVariable("group_id") groupId: Long): ResponseEntity<ResponseDto> {
         val debts = userGroupService.getDebts(groupId = groupId)

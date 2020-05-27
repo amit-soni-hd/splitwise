@@ -65,6 +65,11 @@ class BillController(val billService: BillService) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
+    /**
+     * put api for add the users with old bill
+     * @param includeUserOnBillDto details for adding the user
+     * @return ResponseEntity<ResponseDto> which contain the details of status
+     */
     @PutMapping("/includeUser")
     fun addUsersOnBill(@RequestBody includeUserOnBillDto: IncludeUserOnBillDto): ResponseEntity<ResponseDto> {
         val bill = billService.includeNewUsers(includeUserOnBillDto = includeUserOnBillDto)
