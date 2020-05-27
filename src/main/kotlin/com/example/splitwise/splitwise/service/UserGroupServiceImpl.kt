@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class UserGroupServiceImpl(private val billService: BillService, private val groupRepository: GroupRepository, private val userService: UserService, private val userGroupRepository: UserGroupRepository) : UserGroupService {
+class UserGroupServiceImpl(private val userBillService: UserBillService,private val billService: BillService, private val groupRepository: GroupRepository, private val userService: UserService, private val userGroupRepository: UserGroupRepository) : UserGroupService {
 
     companion object {
         private var log: Logger = LoggerFactory.getLogger(UserGroupServiceImpl::class.java)
@@ -50,5 +50,28 @@ class UserGroupServiceImpl(private val billService: BillService, private val gro
         val existsById = groupRepository.existsById(groupId)
         if (!existsById)
             throw GroupNotFoundException("Group not found with id $groupId")
+    }
+
+    override fun getDebts(groupId: Long): MutableMap<Long, Double> {
+        isGroupExist(groupId = groupId)
+        val users = userGroupRepository.findAllByGroupId(groupId = groupId)
+        val balance:MutableMap<Long, Double> = mutableMapOf()
+        users.forEach { user ->
+            var debit = 0.0
+            var credit = 0.0
+            run {
+                user.involvedBills.forEach { bill ->
+                    run {
+                        val userBill = userBillService.getUserBill(userId = user.userId, billId = bill.billId)
+                        if (bill.ownerId == user.userId)
+                            debit += userBill.dueAmount
+                        else
+                            credit += userBill.dueAmount
+                        balance.put(user.userId, debit-credit)
+                    }
+                }
+            }
+        }
+        return balance
     }
 }

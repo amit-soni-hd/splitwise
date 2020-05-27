@@ -24,4 +24,11 @@ class GroupController(private val userGroupService: UserGroupService) {
         val response = ResponseDto("Total balance", bill, HttpStatus.CREATED)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
+
+    @GetMapping("/balance/{group_id}")
+    fun getDebts(@PathVariable("group_id") groupId: Long): ResponseEntity<ResponseDto> {
+        val debts = userGroupService.getDebts(groupId = groupId)
+        val response = ResponseDto("Total balance of group", debts, HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
 }
