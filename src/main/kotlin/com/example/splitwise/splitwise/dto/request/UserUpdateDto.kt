@@ -7,10 +7,10 @@ data class UserUpdateDto(
         @JsonProperty("user_id", required = false)
         var userId: Long? = 0,
 
-        @JsonProperty("Email")
+        @JsonProperty("email")
         var emailId: String?,
 
-        @JsonProperty("Name")
+        @JsonProperty("name")
         var name: String?,
 
         @JsonProperty("contact")

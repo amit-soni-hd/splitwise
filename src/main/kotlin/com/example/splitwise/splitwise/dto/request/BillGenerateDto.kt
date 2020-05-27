@@ -9,7 +9,7 @@ import javax.persistence.*
 class BillGenerateDto(
 
         @JsonProperty("billId", required = false)
-        var billId:Long,
+        var billId:Long = 0,
 
         @JsonProperty("owner_id")
         var ownerId:Long,

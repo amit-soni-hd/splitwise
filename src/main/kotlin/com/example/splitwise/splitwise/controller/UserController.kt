@@ -30,7 +30,7 @@ class UserController(val userService: UserService) {
      * @return ResponseEntity<ResponseDto> which contain the details of status
      */
     @PutMapping("/{userId}")
-    fun updateUSerDetails(@RequestBody userUpdateDto: UserUpdateDto, @PathVariable(value = "userId") userId: Long): ResponseEntity<ResponseDto> {
+    fun updateUserDetails(@RequestBody userUpdateDto: UserUpdateDto, @PathVariable(value = "userId") userId: Long): ResponseEntity<ResponseDto> {
         val updatedUser = userService.updateDetails(userId, userUpdateDto)
         var response = ResponseDto("Successfully updated", updatedUser, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
