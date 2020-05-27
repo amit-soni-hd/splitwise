@@ -15,4 +15,5 @@ interface UserService {
     fun deleteUser(userId: Long): Boolean
     fun userContactValidation(contact: String)
     fun userEmailValidation(emailId: String)
+    fun validateUsers(users:List<Long>)
 }

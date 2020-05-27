@@ -104,4 +104,9 @@ class UserServiceImpl(private val userRepository: UserRepository, private val mo
                 ?: throw UserNotFoundException("user does not exist with contact no $contact")
     }
 
+    override fun validateUsers(users:List<Long>) {
+        users.forEach { id ->  userIdValidation(userId = id)}
+    }
+
+
 }

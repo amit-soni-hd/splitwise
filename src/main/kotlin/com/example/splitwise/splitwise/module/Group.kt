@@ -14,7 +14,7 @@ data class Group(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "group_id")
-        var groupId: Long,
+        var groupId: Long = 0,
 
         @Column(name = "group_name")
         var groupName: String,

@@ -23,6 +23,14 @@ class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(response)
     }
 
+    @ExceptionHandler(GroupNotFoundException::class)
+    fun handleGroupNotFoundException(request: HttpServletRequest, e: Exception): ResponseEntity<ResponseDto> {
+        log.info("catch group exception with local message ${e.localizedMessage} and message ${e.message}")
+
+        var response = ResponseDto(e.localizedMessage, null, HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(response)
+    }
+
     @ExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFoundException(request: HttpServletRequest, e: Exception): ResponseEntity<ResponseDto> {
         log.info("catch user not found exception with local message ${e.localizedMessage} and message ${e.message}")

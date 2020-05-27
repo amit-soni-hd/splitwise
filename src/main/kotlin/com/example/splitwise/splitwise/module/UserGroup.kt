@@ -8,6 +8,9 @@ class UserGroup(
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id")
+        var id:Long = 0,
+
         @Column(name = "group_id")
         var groupId: Long,
 
