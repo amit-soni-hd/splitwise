@@ -21,7 +21,14 @@ class BalanceController(val balanceService: BalanceService) {
     fun getIndividualBalance(@RequestParam("userId") userId: Long, @RequestParam("respectId") respectId: Long): ResponseEntity<ResponseDto> {
 
         val individualBalance = balanceService.getIndividualBalance(userId = userId, respectUserId = respectId)
-        var response = ResponseDto("Individual Balance", individualBalance, HttpStatus.ACCEPTED)
+        val response = ResponseDto("Individual Balance", individualBalance, HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
+    }
+
+    @GetMapping("/report")
+    fun getReport(): ResponseEntity<ResponseDto> {
+        val totalBalanceOfAllUser = balanceService.getTotalBalanceOfAllUser()
+        val response = ResponseDto("Report of all user balance", totalBalanceOfAllUser, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 

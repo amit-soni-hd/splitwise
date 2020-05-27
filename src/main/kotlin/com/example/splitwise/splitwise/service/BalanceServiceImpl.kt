@@ -1,5 +1,6 @@
 package com.example.splitwise.splitwise.service
 
+import com.example.splitwise.splitwise.module.User
 import com.example.splitwise.splitwise.module.UserBill
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -55,6 +56,20 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
             balance += bill.dueAmount
         }
         return balance
+    }
+
+    override fun getTotalBalanceOfAllUser(): MutableMap<User, MutableMap<String, Double>> {
+
+        val usersBalance:MutableMap<User, MutableMap<String, Double>> = mutableMapOf()
+
+        val allUser = userService.getAllUser()
+        allUser.forEach { user ->
+            run {
+                val totalBalance = getTotalBalance(userId = user.userId)
+                usersBalance.put(user, totalBalance.toMutableMap())
+            }
+        }
+        return usersBalance
     }
 
 }
