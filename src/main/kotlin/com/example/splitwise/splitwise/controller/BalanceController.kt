@@ -25,11 +25,4 @@ class BalanceController(val balanceService: BalanceService) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
-    @GetMapping("/report")
-    fun getReport(): ResponseEntity<ResponseDto> {
-        val totalBalanceOfAllUser = balanceService.getTotalBalanceOfAllUser()
-        val response = ResponseDto("Report of all user balance", totalBalanceOfAllUser, HttpStatus.ACCEPTED)
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
-    }
-
 }

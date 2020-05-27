@@ -17,6 +17,11 @@ class PaymentServiceImpl(private val userBillService: UserBillService, private v
         private var log = LoggerFactory.getLogger(PaymentServiceImpl::class.java)
     }
 
+    /**
+     * function for pay the bill partial of full
+     * @param paymentDto details of bill and user and amount etc..
+     * @return payment receipt of payment
+     */
     override fun payBill(paymentDto: PaymentDto): Payment {
         log.info("pay bill by user ${paymentDto.payerId} to user ${paymentDto.receiverId} for bill ${paymentDto.billId}")
         userService.userIdValidation(userId = paymentDto.payerId)
@@ -43,6 +48,12 @@ class PaymentServiceImpl(private val userBillService: UserBillService, private v
         return payment
     }
 
+    /**
+     * function for getting the payments of a bill by user
+     * @param userId user id of user
+     * @param billId of bill which user want to take history
+     * @return list of payments history
+     */
     override fun getPaymentsOfBill(userId: Long, billId: Long): List<Payment> {
         log.info("get payments of bill $billId by user $userId")
         userService.userIdValidation(userId = userId)
@@ -50,24 +61,44 @@ class PaymentServiceImpl(private val userBillService: UserBillService, private v
         return paymentRepository.findByPayerIdAndBillId(userId = userId, billId = billId).toList()
     }
 
+    /**
+     * fun for getting the all transaction of user
+     *@param userId of user
+     * @return list of payments history
+     */
     override fun getAllTransactionByUserId(userId: Long): Iterable<Payment> {
         log.info("get all payment details by user id $userId")
         userService.userIdValidation(userId = userId)
         return paymentRepository.findAllByPayerIdOrReceiverId(payerId = userId,receiverId = userId)
     }
 
+    /**
+     * function for getting the all paid transaction of user
+     * @param payerId payer id, who pay the bill
+     * @return list of payment history
+     */
     override fun getAllPaidTransactionByUserId(payerId:Long): List<Payment> {
         log.info("get all payments paid by user $payerId")
         userService.userIdValidation(userId = payerId)
         return paymentRepository.findAllByPayerId(payerId = payerId).toList()
     }
 
+    /**
+     * function for getting the all received transaction of user
+     * @param receiverId receiver id, who pay the bill
+     * @return list of payment history
+     */
     override fun getAllReceivedTransactionByUserId(receiverId:Long): List<Payment> {
         log.info("get all payments paid by user $receiverId")
         userService.userIdValidation(userId = receiverId)
         return paymentRepository.findAllByReceiverId(receiverId = receiverId).toList()
     }
 
+    /**
+     * get all payments by bill id
+     * @param billId bill id
+     * @return list of payment history
+     */
     override fun getPaymentsByBillId(billId: Long): Iterable<Payment> {
         log.info("get payment details by bill id $billId")
         billService.isBillExist(billId = billId)

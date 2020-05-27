@@ -40,6 +40,11 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return save;
     }
 
+    /**
+     * function for include the new user
+     * @param includeUserOnBillDto details for adding new user of a bill
+     * @return bill which we include the user
+     */
     override fun includeNewUsers(includeUserOnBillDto: IncludeUserOnBillDto): Bill {
         isBillExist(billId = includeUserOnBillDto.billId)
         includeUserOnBillDto.usersId.forEach { userId -> userService.userIdValidation(userId = userId) }
@@ -146,6 +151,11 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return billRepository.save(bill)
     }
 
+    /**
+     * function for undo the bill
+     * @param billId bill id
+     * @return bill
+     */
     override fun undoBill(billId: Long): Bill {
         isBillExist(billId = billId)
         val bill = billRepository.findById(billId).get()
@@ -153,6 +163,11 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return billRepository.save(bill)
     }
 
+    /**
+     * function for update old users bill after adding new user in same bill
+     * @param bill object of bill
+     * @return
+     */
     private fun updateOldUsersBill(bill: Bill) {
         val usersBill = userBillService.getUserBillsByBillId(billId = bill.billId)
         val usersUpdateBill = mutableListOf<UserBill>()

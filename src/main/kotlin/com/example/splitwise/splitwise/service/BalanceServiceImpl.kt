@@ -1,6 +1,5 @@
 package com.example.splitwise.splitwise.service
 
-import com.example.splitwise.splitwise.module.User
 import com.example.splitwise.splitwise.module.UserBill
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -13,6 +12,11 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
         private var log: Logger = LoggerFactory.getLogger(BalanceServiceImpl::class.java)
     }
 
+    /**
+     * function for getting the total balance of user
+     * @param userId user id
+     * @return map of debit and credit balance and total balance
+     */
     override fun getTotalBalance(userId: Long): Map<String, Double> {
         log.info("Get total balance with user id $userId")
         userService.userIdValidation(userId = userId)
@@ -34,6 +38,12 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
     }
 
 
+    /**
+     * get the individual balance of user
+     * @param userId user id
+     * @param respectUserId second user id
+     * @return map of debit and credit balance and total balance
+     */
     override fun getIndividualBalance(userId: Long, respectUserId: Long): Map<String, Double> {
         log.info("get individual balance for user $userId to respect user $respectUserId")
         userService.userIdValidation(userId = userId)
@@ -48,6 +58,11 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
 
     }
 
+    /**
+     * for calculate the balance of bills
+     * @param bills list of bill
+     * @return balance
+     */
     private fun getBalance(bills: MutableList<UserBill>, userId: Long): Double {
         log.info("get balance with user id $userId")
         var balance = 0.0
@@ -58,18 +73,5 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
         return balance
     }
 
-    override fun getTotalBalanceOfAllUser(): MutableMap<User, MutableMap<String, Double>> {
-
-        val usersBalance:MutableMap<User, MutableMap<String, Double>> = mutableMapOf()
-
-        val allUser = userService.getAllUser()
-        allUser.forEach { user ->
-            run {
-                val totalBalance = getTotalBalance(userId = user.userId)
-                usersBalance.put(user, totalBalance.toMutableMap())
-            }
-        }
-        return usersBalance
-    }
 
 }
