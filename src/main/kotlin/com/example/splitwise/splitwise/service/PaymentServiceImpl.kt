@@ -62,10 +62,10 @@ class PaymentServiceImpl(private val userBillService: UserBillService, private v
         return paymentRepository.findAllByPayerId(payerId = payerId).toList()
     }
 
-    override fun getAllRecivedTransactionByUserId(payerId:Long): List<Payment> {
-        log.info("get all payments paid by user $payerId")
-        userService.userIdValidation(userId = payerId)
-        return paymentRepository.findAllByReceiverId(receiverId = payerId).toList()
+    override fun getAllReceivedTransactionByUserId(receiverId:Long): List<Payment> {
+        log.info("get all payments paid by user $receiverId")
+        userService.userIdValidation(userId = receiverId)
+        return paymentRepository.findAllByReceiverId(receiverId = receiverId).toList()
     }
 
     override fun getPaymentsByBillId(billId: Long): Iterable<Payment> {

@@ -43,14 +43,15 @@ class BalanceServiceImpl(private val userBillService: UserBillService, val userS
         val debit = getBalance(userBills.toMutableList(), userId = userId)
         val credit = getBalance(respectUserBills.toMutableList(), userId = respectUserId)
 
-        return mapOf("Credit" to credit, "Debit" to debit, "Total Balance" to debit - credit)
+        return mapOf("Credit" to credit, "Debit" to debit, "Balance" to debit - credit)
 
     }
 
     private fun getBalance(bills: MutableList<UserBill>, userId: Long): Double {
-        log.info("get debit balance with user id $userId")
+        log.info("get balance with user id $userId")
         var balance = 0.0
         bills.forEach { bill ->
+            log.info("get bill balance with user id ${bill.userId} bill id : ${bill.billId} and due amount ${bill.dueAmount}")
             balance += bill.dueAmount
         }
         return balance

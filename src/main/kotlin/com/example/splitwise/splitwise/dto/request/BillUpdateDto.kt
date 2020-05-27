@@ -21,5 +21,5 @@ class BillUpdateDto(
         var date: LocalDateTime?,
 
         @JsonProperty("group_id")
-        var groupId :Long?
+        var groupId :Long? = null
 )

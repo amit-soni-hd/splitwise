@@ -22,7 +22,7 @@ data class Payment(
         val receiverId: Long,
 
         @Column(name = "amount", nullable = false)
-        val amount: Double,
+        var amount: Double,
 
         @Column(name = "payment_type", nullable = false)
         var paymentType: PaymentType,

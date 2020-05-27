@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService, private val userBillRepository: UserBillRepository) : BillService {
+class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepository: BillRepository, private val userService: UserService, private val userBillService: UserBillService) : BillService {
 
     /**
      * object of logger for print the logs
@@ -65,7 +65,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
                             groupId = bill.groupId, ownerId = bill.ownerId))
                 }
         }
-        userBillRepository.saveAll(mutableList)
+        userBillService.saveAllBill(mutableList)
     }
 
     /**
@@ -154,7 +154,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
     }
 
     private fun updateOldUsersBill(bill: Bill) {
-        val usersBill = userBillRepository.findAllByBillId(billId = bill.billId)
+        val usersBill = userBillService.getUserBillsByBillId(billId = bill.billId)
         val usersUpdateBill = mutableListOf<UserBill>()
         usersBill.forEach { userBill ->
             run {
@@ -169,7 +169,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
                 usersUpdateBill.add(userBill)
             }
         }
-        userBillRepository.saveAll(usersUpdateBill)
+        userBillService.saveAllBill(usersUpdateBill)
     }
 
 }

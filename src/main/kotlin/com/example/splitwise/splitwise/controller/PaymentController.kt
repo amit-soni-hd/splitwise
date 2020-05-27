@@ -20,7 +20,7 @@ class PaymentController(val paymentService: PaymentService) {
 
     @GetMapping("/user/{userId}")
     fun getAllTransaction(@PathVariable("userId") userId: Long): ResponseEntity<ResponseDto> {
-        val allTransaction = paymentService.getAllTransactionByUserId(payerId = userId)
+        val allTransaction = paymentService.getAllTransactionByUserId(userId = userId)
         var response = ResponseDto("Successfully fetch all transaction ", allTransaction, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
