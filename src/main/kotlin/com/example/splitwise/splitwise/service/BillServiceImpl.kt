@@ -2,6 +2,7 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.dto.request.BillGenerateDto
 import com.example.splitwise.splitwise.dto.request.BillUpdateDto
+import com.example.splitwise.splitwise.dto.request.IncludeUserOnBillDto
 import com.example.splitwise.splitwise.enum.BillStatus
 import com.example.splitwise.splitwise.enum.PaymentStatus
 import com.example.splitwise.splitwise.exception.BillNotFoundException
@@ -39,13 +40,14 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         return save;
     }
 
-    override fun includeNewUsers(userIds: List<Long>, billId: Long) {
-        isBillExist(billId = billId)
-        userIds.forEach { userId -> userService.userIdValidation(userId = userId) }
-        val bill = billRepository.findById(billId).get()
-        bill.noOfUser += userIds.size
+    override fun includeNewUsers(includeUserOnBillDto: IncludeUserOnBillDto): Bill {
+        isBillExist(billId = includeUserOnBillDto.billId)
+        includeUserOnBillDto.usersId.forEach { userId -> userService.userIdValidation(userId = userId) }
+        val bill = billRepository.findById(includeUserOnBillDto.billId).get()
+        bill.noOfUser += includeUserOnBillDto.usersId.size
         updateOldUsersBill(bill = bill)
-        addUserBills(userIds = userIds, bill = bill)
+        addUserBills(userIds = includeUserOnBillDto.usersId, bill = bill)
+        return bill
     }
 
     /**

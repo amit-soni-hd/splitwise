@@ -2,6 +2,7 @@ package com.example.splitwise.splitwise.controller
 
 import com.example.splitwise.splitwise.dto.request.BillGenerateDto
 import com.example.splitwise.splitwise.dto.request.BillUpdateDto
+import com.example.splitwise.splitwise.dto.request.IncludeUserOnBillDto
 import com.example.splitwise.splitwise.dto.response.ResponseDto
 import com.example.splitwise.splitwise.service.BillService
 import org.springframework.http.HttpStatus
@@ -61,6 +62,13 @@ class BillController(val billService: BillService) {
     fun deleteBill(@PathVariable("billId") billId: Long): ResponseEntity<ResponseDto> {
         val deleteBill = billService.deleteBill(billId = billId)
         val response = ResponseDto("Successfully update  bill ", deleteBill, HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
+    }
+
+    @PutMapping("/includeUser")
+    fun addUsersOnBill(@RequestBody includeUserOnBillDto: IncludeUserOnBillDto): ResponseEntity<ResponseDto> {
+        val bill = billService.includeNewUsers(includeUserOnBillDto = includeUserOnBillDto)
+        val response = ResponseDto("Successfully add on  bill ", bill, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 }

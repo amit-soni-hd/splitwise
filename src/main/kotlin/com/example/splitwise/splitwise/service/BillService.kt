@@ -2,6 +2,7 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.dto.request.BillGenerateDto
 import com.example.splitwise.splitwise.dto.request.BillUpdateDto
+import com.example.splitwise.splitwise.dto.request.IncludeUserOnBillDto
 import com.example.splitwise.splitwise.module.Bill
 import com.example.splitwise.splitwise.module.UserBill
 
@@ -12,5 +13,5 @@ interface BillService {
     fun isBillExist(billId: Long)
     fun deleteBill(billId: Long): Bill
     fun undoBill(billId: Long): Bill
-    fun includeNewUsers(userIds: List<Long>, billId: Long)
+    fun includeNewUsers(includeUserOnBillDto: IncludeUserOnBillDto) : Bill
 }
