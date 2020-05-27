@@ -77,7 +77,7 @@ class BillController(val billService: BillService) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response)
     }
 
-    @PutMapping("/{billId}")
+    @PutMapping("/undo/{billId}")
     fun undoBill(@PathVariable("billId") billId: Long): ResponseEntity<ResponseDto> {
         val undoBill = billService.undoBill(billId = billId)
         val response = ResponseDto("Successfully update  bill ", undoBill, HttpStatus.OK)
