@@ -31,12 +31,13 @@ data class Bill(
         @Column(name = "no_of_user")
         var noOfUser: Long = 0,
 
-        @Column(name = "group_Id", nullable = true)
-        var groupId: Long? = null,
-
         @Column(name = "bill_status")
         @Enumerated(value = EnumType.STRING)
-        var billStatus: BillStatus = BillStatus.PRESENT
+        var billStatus: BillStatus = BillStatus.PRESENT,
+
+        @ManyToOne(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
+        @JoinColumn(name = "involved_Bills")
+        var userGroup: UserGroup? = null
 
 )
 

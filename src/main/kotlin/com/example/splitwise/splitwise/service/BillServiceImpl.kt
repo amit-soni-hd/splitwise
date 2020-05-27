@@ -62,7 +62,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
                 run {
                     mutableList.add(UserBill(userId = id, billId = bill.billId,
                             userShare = bill.amount.div(bill.noOfUser), dueAmount = bill.amount.div(bill.noOfUser),
-                            groupId = bill.groupId, ownerId = bill.ownerId))
+                            ownerId = bill.ownerId))
                 }
         }
         userBillService.saveAllBill(mutableList)
@@ -127,8 +127,6 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         if (billUpdateDto.description != null)
             bill.description = billUpdateDto.description!!
 
-        if (billUpdateDto.groupId != null)
-            bill.groupId = billUpdateDto.groupId
         updateOldUsersBill(bill = bill)
         return billRepository.save(bill)
     }
@@ -158,7 +156,6 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         val usersUpdateBill = mutableListOf<UserBill>()
         usersBill.forEach { userBill ->
             run {
-                userBill.groupId = bill.groupId
                 val paidBalance = userBill.userShare - userBill.dueAmount
                 userBill.userShare = bill.amount.div(bill.noOfUser)
                 userBill.dueAmount = userBill.userShare - paidBalance
