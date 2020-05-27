@@ -2,7 +2,12 @@ package com.example.splitwise.splitwise.service
 
 import com.example.splitwise.splitwise.module.Payment
 import com.example.splitwise.splitwise.module.User
+import com.google.gson.Gson
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.io.File
+import java.nio.charset.Charset
+import java.time.LocalDate
 
 @Service
 class ReportGenerateServiceImpl(private val userService: UserService, private val balanceService: BalanceService, private val paymentService: PaymentService) : ReportGenerateService {
@@ -25,5 +30,13 @@ class ReportGenerateServiceImpl(private val userService: UserService, private va
             }
         }
         return reports
+    }
+
+    @Scheduled(cron = "0 0 12 1 * * ?")
+    fun getReport() {
+        val json = Gson()
+        var jsonString:String = json.toJson(generateReport())
+        val file = File("src/main/resources/report-" + LocalDate.now())
+        file.writeText(jsonString, charset =  Charset.forName("UTF_8"))
     }
 }
