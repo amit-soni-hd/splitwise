@@ -55,7 +55,7 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
     override fun getDebts(groupId: Long): MutableMap<Long, Double> {
         isGroupExist(groupId = groupId)
         val users = userGroupRepository.findAllByGroupId(groupId = groupId)
-        val balance:MutableMap<Long, Double> = mutableMapOf()
+        val balances:MutableMap<Long, Double> = mutableMapOf()
         users.forEach { user ->
             var debit = 0.0
             var credit = 0.0
@@ -67,11 +67,13 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
                             debit += userBill.dueAmount
                         else
                             credit += userBill.dueAmount
-                        balance.put(user.userId, debit-credit)
+
                     }
                 }
             }
+            log.info("userid ${user.userId} " + debit.minus(credit))
+            balances[user.userId] = debit.minus(credit)
         }
-        return balance
+        return balances
     }
 }
