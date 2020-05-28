@@ -20,6 +20,9 @@ data class Group(
         var groupName: String,
 
         @Column(name = "created_date_time")
-        var date: LocalDateTime
+        var date: LocalDateTime,
+
+        @OneToMany(mappedBy = "group" , fetch = FetchType.EAGER)
+        var involvedBills:MutableList<Bill> = mutableListOf()
 
 )

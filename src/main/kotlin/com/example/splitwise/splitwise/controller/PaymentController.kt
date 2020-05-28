@@ -19,7 +19,7 @@ class PaymentController(val paymentService: PaymentService) {
     @PostMapping("/")
     fun payBill(@RequestBody paymentDto: PaymentDto): ResponseEntity<ResponseDto> {
         val payBill = paymentService.payBill(paymentDto = paymentDto)
-        var response = ResponseDto("Successfully paiid", payBill, HttpStatus.ACCEPTED)
+        var response = ResponseDto("Successfully paid", payBill, HttpStatus.ACCEPTED)
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 

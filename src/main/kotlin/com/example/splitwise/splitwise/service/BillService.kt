@@ -11,7 +11,9 @@ interface BillService {
     fun getBill(billId: Long): Bill
     fun updateBill(billUpdateDto: BillUpdateDto): Bill
     fun isBillExist(billId: Long)
+    fun isBillPresent(billId: Long)
     fun deleteBill(billId: Long): Bill
     fun undoBill(billId: Long): Bill
     fun includeNewUsers(includeUserOnBillDto: IncludeUserOnBillDto) : Bill
+    fun saveBill(bill: Bill)
 }

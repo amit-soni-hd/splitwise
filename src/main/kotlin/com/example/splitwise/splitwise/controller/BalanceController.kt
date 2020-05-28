@@ -29,7 +29,7 @@ class BalanceController(val balanceService: BalanceService) {
      * @return ResponseEntity<ResponseDto> which contain the details of status
      */
     @GetMapping("/individual/{userId}/{respectId}")
-    fun getIndividualBalance(@RequestParam("userId") userId: Long, @RequestParam("respectId") respectId: Long): ResponseEntity<ResponseDto> {
+    fun getIndividualBalance(@PathVariable("userId") userId: Long, @PathVariable("respectId") respectId: Long): ResponseEntity<ResponseDto> {
 
         val individualBalance = balanceService.getIndividualBalance(userId = userId, respectUserId = respectId)
         val response = ResponseDto("Individual Balance", individualBalance, HttpStatus.ACCEPTED)

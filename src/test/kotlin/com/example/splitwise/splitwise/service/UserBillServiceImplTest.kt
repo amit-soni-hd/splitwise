@@ -73,7 +73,7 @@ internal class UserBillServiceImplTest {
     @Test
     @DisplayName("fetch the user pending and user generate bill")
     fun getUserPendingAndUserOwnerBills() {
-        `when`(userBillRepository.findUserPendingAndUserOwnerBills(userId = 1, paymentStatus = PaymentStatus.PENDING)).thenReturn(mutableListOf(userBill1, userBill3, userBill2))
+        `when`(userBillRepository.findUserPendingAndUserOwnerBills(userId = 1)).thenReturn(mutableListOf(userBill1, userBill3, userBill2))
         val userBills = userBillService.getUserPendingAndUserOwnerBills(1)
         assertAll("verify userBills bill",
                 { assertEquals(3, userBills.size) },

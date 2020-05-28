@@ -36,8 +36,8 @@ data class Bill(
         var billStatus: BillStatus = BillStatus.PRESENT,
 
         @ManyToOne(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
-        @JoinColumn(name = "involved_Bills")
-        var userGroup: UserGroup? = null
+        @JoinColumn(name = "group_id")
+        var group: Group? = null
 
 )
 

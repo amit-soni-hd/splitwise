@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @EnableJpaRepositories
-interface GroupRepository : JpaRepository<Group, Long> {
-}
+interface GroupRepository : JpaRepository<Group, Long>

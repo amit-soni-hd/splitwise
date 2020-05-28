@@ -8,6 +8,7 @@ import com.example.splitwise.splitwise.repository.PaymentRepository
 import org.modelmapper.ModelMapper
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class PaymentServiceImpl(private val userBillService: UserBillService, private val modelMapper: ModelMapper,
@@ -41,6 +42,7 @@ class PaymentServiceImpl(private val userBillService: UserBillService, private v
         if (userBill.dueAmount == 0.0)
             userBill.paymentStatus = PaymentStatus.COMPLETE
 
+        payment.date = LocalDateTime.now()
         payment.paymentDue = userBill.dueAmount
         payment.paymentStatus = PaymentStatus.COMPLETE
         paymentRepository.save(payment)

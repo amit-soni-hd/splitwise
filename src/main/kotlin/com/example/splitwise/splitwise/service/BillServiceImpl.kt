@@ -35,6 +35,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
         val bill = modelMapper.map(billGenerateDto, Bill::class.java)
         validateUser(billGenerateDto.involvedUserIds)
         bill.noOfUser = billGenerateDto.involvedUserIds?.size?.toLong()!!
+        bill.billStatus = BillStatus.PRESENT
         val save = billRepository.save(bill)
         addUserBills(billGenerateDto.involvedUserIds, save)
         return save;
@@ -106,6 +107,12 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
      */
     override fun isBillExist(billId: Long) {
         log.info("check bill validation with id $billId")
+        val exist = billRepository.findByIdAndBillStatus(billId).isEmpty
+        if (exist)
+            throw BillNotFoundException("Bill does not exist with id $billId")
+    }
+
+    override fun isBillPresent(billId: Long) {
         val existsById = billRepository.existsById(billId)
         if (!existsById)
             throw BillNotFoundException("Bill does not exist with id $billId")
@@ -157,7 +164,7 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
      * @return bill
      */
     override fun undoBill(billId: Long): Bill {
-        isBillExist(billId = billId)
+        isBillPresent(billId = billId)
         val bill = billRepository.findById(billId).get()
         bill.billStatus = BillStatus.PRESENT
         return billRepository.save(bill)
@@ -184,6 +191,10 @@ class BillServiceImpl(private val modelMapper: ModelMapper, private val billRepo
             }
         }
         userBillService.saveAllBill(usersUpdateBill)
+    }
+
+    override fun saveBill(bill: Bill) {
+        billRepository.save(bill)
     }
 
 }

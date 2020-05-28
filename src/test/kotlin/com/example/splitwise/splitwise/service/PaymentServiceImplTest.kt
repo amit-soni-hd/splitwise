@@ -32,6 +32,8 @@ internal class PaymentServiceImplTest {
     private lateinit var userBillService: UserBillServiceImpl
     @Mock
     private lateinit var paymentRepository: PaymentRepository
+    @Mock
+    private lateinit var billService: BillServiceImpl
 
     companion object {
         private var payment1 = Payment(paymentId = 1, billId = 1, payerId = 1, receiverId = 2,

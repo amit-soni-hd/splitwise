@@ -15,8 +15,5 @@ class UserGroup(
         var groupId: Long,
 
         @Column(name = "user_id")
-        var userId: Long,
-
-        @OneToMany(mappedBy = "userGroup" )
-        var involvedBills:MutableList<Bill> = mutableListOf()
+        var userId: Long
 )

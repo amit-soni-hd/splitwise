@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class UserGroupServiceImpl(private val userBillService: UserBillService,private val billService: BillService, private val groupRepository: GroupRepository, private val userService: UserService, private val userGroupRepository: UserGroupRepository) : UserGroupService {
+class UserGroupServiceImpl(private val userBillService: UserBillService, private val billService: BillService, private val groupRepository: GroupRepository, private val userService: UserService, private val userGroupRepository: UserGroupRepository) : UserGroupService {
 
     companion object {
         private var log: Logger = LoggerFactory.getLogger(UserGroupServiceImpl::class.java)
@@ -46,13 +46,11 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
         isGroupExist(groupId = groupId)
         billService.isBillExist(billId = billId)
         val bill = billService.getBill(billId = billId)
-        val usersGroupDetail = userGroupRepository.findAllByGroupId(groupId = groupId)
-        usersGroupDetail.forEach { userGroup ->
-            run {
-                userGroup.involvedBills.add(bill)
-            }
-            userGroupRepository.save(userGroup)
-        }
+        val group = groupRepository.findById(groupId).get()
+        group.involvedBills.add(bill)
+        bill.group = group
+        billService.saveBill(bill = bill)
+        groupRepository.save(group)
         return bill
     }
 
@@ -73,26 +71,23 @@ class UserGroupServiceImpl(private val userBillService: UserBillService,private 
      * @return mutable map of details of debts of a group
      */
     override fun getDebts(groupId: Long): MutableMap<Long, Double> {
+        log.info("getting the group debts with group id $groupId")
         isGroupExist(groupId = groupId)
-        val users = userGroupRepository.findAllByGroupId(groupId = groupId)
-        val balances:MutableMap<Long, Double> = mutableMapOf()
-        users.forEach { user ->
-            var debit = 0.0
-            var credit = 0.0
-            run {
-                user.involvedBills.forEach { bill ->
-                    run {
-                        val userBill = userBillService.getUserBill(userId = user.userId, billId = bill.billId)
-                        if (bill.ownerId == user.userId)
-                            debit += userBill.dueAmount
-                        else
-                            credit += userBill.dueAmount
+        val balances: MutableMap<Long, Double> = mutableMapOf()
+        val groupBills = groupRepository.findById(groupId).get().involvedBills.toList()
 
-                    }
+        groupBills.forEach { bill ->
+            val userBillsByBillId = userBillService.getUserBillsByBillId(billId = bill.billId)
+            userBillsByBillId.forEach { userBill ->
+                run {
+                    if(!balances.containsKey(userBill.ownerId))
+                        balances[userBill.ownerId] = 0.0
+                    if(!balances.containsKey(userBill.userId))
+                        balances[userBill.userId] = 0.0
+                    balances[userBill.ownerId] = balances[userBill.ownerId]!! + userBill.dueAmount
+                    balances[userBill.userId] = balances[userBill.userId]!! - userBill.dueAmount
                 }
             }
-            log.info("userid ${user.userId} " + debit.minus(credit))
-            balances[user.userId] = debit.minus(credit)
         }
         return balances
     }

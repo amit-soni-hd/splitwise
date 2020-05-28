@@ -34,6 +34,7 @@ class UserBillServiceImpl(private val userBillRepository: UserBillRepository) : 
      * @return user's user bill
      */
     override fun getUserBill(userId: Long, billId: Long): UserBill {
+
         return userBillRepository.findByUserIdAndBillId(userId = userId, billId = billId).get()
     }
 
@@ -63,7 +64,7 @@ class UserBillServiceImpl(private val userBillRepository: UserBillRepository) : 
      */
     override fun getUserPendingAndUserOwnerBills(userId: Long): List<UserBill> {
         return userBillRepository
-                .findUserPendingAndUserOwnerBills(userId = userId, paymentStatus = PaymentStatus.PENDING).toList()
+                .findUserPendingAndUserOwnerBills(userId = userId).toList()
     }
 
     /**

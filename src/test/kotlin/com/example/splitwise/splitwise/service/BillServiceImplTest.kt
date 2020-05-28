@@ -10,6 +10,7 @@ import com.example.splitwise.splitwise.module.UserBill
 import com.example.splitwise.splitwise.repository.BillRepository
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -65,7 +66,8 @@ internal class BillServiceImplTest {
     @Test
     @DisplayName("get the bill by id")
     fun getBill() {
-        `when`(billRepository.existsById(anyLong())).thenReturn(true)
+        `when`(billRepository.findByIdAndBillStatus(anyLong())).thenReturn(Optional.of(bill1))
+
         `when`(billRepository.findById(anyLong())).thenReturn(Optional.of(bill1))
         val bill = billService.getBill(1)
         assertAll("check bill details",
@@ -77,15 +79,15 @@ internal class BillServiceImplTest {
     @Test
     @DisplayName("test bill existence")
     fun isBillExist() {
-        `when`(billRepository.existsById(anyLong())).thenReturn(true)
+        `when`(billRepository.findByIdAndBillStatus(anyLong())).thenReturn(Optional.of(bill1))
         billService.isBillExist(1)
-        verify(billRepository, times(1)).existsById(anyLong())
+        verify(billRepository, times(1)).findByIdAndBillStatus(anyLong())
     }
 
     @Test
     @DisplayName("bill does not exist")
     fun `bill does not exist`() {
-        `when`(billRepository.existsById(anyLong())).thenReturn(false)
+        `when`(billRepository.findByIdAndBillStatus(anyLong())).thenReturn(Optional.empty())
 
         val expectedException = assertThrows<BillNotFoundException>("Should throw an exception") {
             billService.isBillExist(1)
@@ -93,14 +95,15 @@ internal class BillServiceImplTest {
         assertAll("check exception",
                 { assertEquals("Bill does not exist with id 1", expectedException.message) }
         )
-        verify(billRepository, times(1)).existsById(anyLong())
+        verify(billRepository, times(1)).findByIdAndBillStatus(anyLong())
     }
 
     @Test
     @DisplayName("update the bill")
     fun updateBill() {
 
-        `when`(billRepository.existsById(anyLong())).thenReturn(true)
+        `when`(billRepository.findByIdAndBillStatus(anyLong())).thenReturn(Optional.of(bill1))
+
         `when`(billRepository.findById(anyLong())).thenReturn(Optional.of(bill1))
         `when`(userBillService.getUserBillsByBillId(anyLong())).thenReturn(listOf(userBill))
         `when`(billRepository.save(any(Bill::class.java))).thenReturn(bill1)
@@ -116,7 +119,8 @@ internal class BillServiceImplTest {
     @DisplayName("delete the bill")
     fun deleteBill() {
         bill1.billStatus = BillStatus.PRESENT
-        `when`(billRepository.existsById(anyLong())).thenReturn(true)
+        `when`(billRepository.findByIdAndBillStatus(anyLong())).thenReturn(Optional.of(bill1))
+
         `when`(billRepository.findById(anyLong())).thenReturn(Optional.of(bill1))
         `when`(billRepository.save(any(Bill::class.java))).thenReturn(bill1)
         val deleteBill = billService.deleteBill(1)
@@ -132,6 +136,7 @@ internal class BillServiceImplTest {
     fun `undo the Bill`() {
         bill1.billStatus = BillStatus.DELETED
         `when`(billRepository.existsById(anyLong())).thenReturn(true)
+
         `when`(billRepository.findById(anyLong())).thenReturn(Optional.of(bill1))
         `when`(billRepository.save(any(Bill::class.java))).thenReturn(bill1)
         val deleteBill = billService.undoBill(1)
